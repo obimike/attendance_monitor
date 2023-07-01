@@ -61,10 +61,12 @@ class Welcome extends StatelessWidget {
                           ),
                         ),
                       ),
+                      const SizedBox(height: 48),
                       ElevatedButton(
                         onPressed: () {
                           Navigator.of(context).push(
-                            MaterialPageRoute(builder: (context) => const Login()),
+                            MaterialPageRoute(
+                                builder: (context) => const Login()),
                           );
                         },
                         child: const Text(
