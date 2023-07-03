@@ -1,4 +1,5 @@
 import 'package:Attendance_Monitor/admin/features/auth/auth/pages/login.dart';
+import 'package:Attendance_Monitor/admin/features/dashboard/pages/dashboard.dart';
 import 'package:flutter/material.dart';
 
 class Register extends StatefulWidget {
@@ -131,9 +132,9 @@ class _RegisterState extends State<Register> {
                   const SizedBox(height: 24),
                   ElevatedButton(
                     onPressed: () {
-                      // Navigator.of(context).push(
-                      //   MaterialPageRoute(builder: (context) => const Login()),
-                      // );
+                      Navigator.of(context).push(
+                        MaterialPageRoute(builder: (context) => const DashBoard()),
+                      );
                     },
                     child: SizedBox(
                       width: dynamicWidth,

@@ -130,7 +130,7 @@ class _OnBoardingState extends State<OnBoarding> {
                               );
                             } else {
                               _pageController.nextPage(
-                                duration: const Duration(milliseconds: 300),
+                                duration: const Duration(milliseconds: 600),
                                 curve: Curves.ease,
                               );
                             }
@@ -151,7 +151,7 @@ class _OnBoardingState extends State<OnBoarding> {
     for (int i = 0; i < _pages.length; i++) {
       indicators.add(
         Container(
-          margin: EdgeInsets.symmetric(horizontal: 8),
+          margin: const EdgeInsets.symmetric(horizontal: 8),
           height: 8,
           width: _currentPage == i ? 24 : 8,
           decoration: BoxDecoration(

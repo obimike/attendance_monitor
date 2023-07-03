@@ -15,9 +15,13 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Attendify',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
+      themeMode: ThemeMode.dark,
+      darkTheme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.redAccent),
         useMaterial3: true,
+        appBarTheme: const AppBarTheme(
+            backgroundColor: Colors.black,
+            iconTheme: IconThemeData(color: Colors.white, size: 36)),
         textTheme: GoogleFonts.poppinsTextTheme(
           const TextTheme(
             titleLarge: TextStyle(
@@ -26,14 +30,12 @@ class MyApp extends StatelessWidget {
               fontWeight: FontWeight.w300,
               fontStyle: FontStyle.normal,
             ),
-
             bodyLarge: TextStyle(
               fontSize: 24,
               color: Colors.white,
               fontWeight: FontWeight.w300,
               fontStyle: FontStyle.normal,
             ),
-
             bodyMedium: TextStyle(
               fontSize: 18,
               color: Colors.white,
@@ -46,19 +48,20 @@ class MyApp extends StatelessWidget {
               fontWeight: FontWeight.w300,
               fontStyle: FontStyle.normal,
             ),
-
           ),
         ),
         scaffoldBackgroundColor: const Color.fromARGB(255, 51, 51, 51),
         inputDecorationTheme: const InputDecorationTheme(
-            fillColor: Colors.white,
-            focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.transparent)),
-            outlineBorder: BorderSide(color: Colors.white),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.all(Radius.circular(8)),
-            ),
-            filled: true),
+          fillColor: Colors.transparent,
+          focusedBorder:
+              OutlineInputBorder(borderSide: BorderSide(color: Colors.white)),
+          outlineBorder: BorderSide(color: Colors.grey),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.all(Radius.circular(8)),
+          ),
+          filled: true,
+          contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+        ),
         elevatedButtonTheme: ElevatedButtonThemeData(
             style: ButtonStyle(
           padding: MaterialStateProperty.all(
@@ -69,6 +72,13 @@ class MyApp extends StatelessWidget {
             ),
           ),
         )),
+        dialogTheme: const DialogTheme(
+          backgroundColor: Colors.black,
+          surfaceTintColor: Colors.black,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(30)),
+          ),
+        ),
       ),
       home: const Splash(),
     );
