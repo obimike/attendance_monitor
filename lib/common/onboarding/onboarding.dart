@@ -119,9 +119,6 @@ class _OnBoardingState extends State<OnBoarding> {
                             _currentPage == _pages.length - 1
                                 ? 'Get Started'
                                 : 'Next',
-                            style: const TextStyle(
-                              fontSize: 16,
-                            ),
                           ),
                           onPressed: () {
                             if (_currentPage == _pages.length - 1) {
@@ -130,7 +127,7 @@ class _OnBoardingState extends State<OnBoarding> {
                               );
                             } else {
                               _pageController.nextPage(
-                                duration: const Duration(milliseconds: 600),
+                                duration: const Duration(milliseconds: 800),
                                 curve: Curves.ease,
                               );
                             }

@@ -1,15 +1,15 @@
-import 'package:Attendance_Monitor/admin/features/auth/auth/pages/login.dart';
-import 'package:Attendance_Monitor/admin/features/dashboard/pages/dashboard.dart';
+import 'package:Attendance_Monitor/student/features/auth/presentation/pages/signin.dart';
+import 'package:Attendance_Monitor/student/widgets/home.dart';
 import 'package:flutter/material.dart';
 
-class Register extends StatefulWidget {
-  const Register({super.key});
+class SignUp extends StatefulWidget {
+  const SignUp({super.key});
 
   @override
-  State<Register> createState() => _RegisterState();
+  State<SignUp> createState() => _SignUpState();
 }
 
-class _RegisterState extends State<Register> {
+class _SignUpState extends State<SignUp> {
 
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -18,6 +18,30 @@ class _RegisterState extends State<Register> {
   String get _password => _passwordController.text;
 
   bool _obscureText = true;
+  String genderValue = "Male";
+
+  DateTime? _selectedDate;
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(), // Set initialDate to the current date
+      firstDate: DateTime(1920),
+      lastDate: DateTime(2030), // Set lastDate to a future date
+    );
+
+    if (picked != null && picked != _selectedDate) {
+      setState(() {
+        _selectedDate = picked;
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedDate = DateTime.now();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,20 +55,29 @@ class _RegisterState extends State<Register> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                   Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                  Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                     Text(
                       "Attendify",
                       style: Theme.of(context).textTheme.titleLarge,
                     ),
                   ]),
                   const SizedBox(height: 48),
-                   Text(
-                    "Admin Registration",
+                  Text(
+                    "Student SignUp",
                     style: Theme.of(context).textTheme.bodyLarge,
                   ),
                   const SizedBox(height: 48),
-                   Text(
+                  Text(
                     "Full Name (Last Name first)",
+                    style: Theme.of(context).textTheme.bodyMedium,
+                    textAlign: TextAlign.start,
+                  ),
+                  TextField(
+                    controller: _emailController,
+                  ),
+                  const SizedBox(height: 12),
+                  Text(
+                    "Class ID (Get from Administrator)",
                     style: Theme.of(context).textTheme.bodyMedium,
                     textAlign: TextAlign.start,
                   ),
@@ -62,24 +95,70 @@ class _RegisterState extends State<Register> {
                   ),
                   const SizedBox(height: 12),
                   Text(
-                    "Authorization Key",
+                    "Gender",
                     style: Theme.of(context).textTheme.bodyMedium,
                     textAlign: TextAlign.start,
                   ),
-                  TextField(
-                    controller: _emailController,
+                  Row(children: ["Male", "Female"].map((e) => SizedBox(
+                    width: 200,
+                    child: ListTile(
+                      title: Text(
+                       e,
+                        style: Theme.of(context).textTheme.bodyMedium,
+                        textAlign: TextAlign.start,
+                      ),
+                      leading: Radio<String>(
+                          value: e,
+                          groupValue: genderValue,
+                          onChanged: (String? value){
+                            if(value != null){
+                              setState(() {
+                                genderValue = value;
+                              });
+                            }
+                          },
+                      ),
+                    ),
+                  ),
+                  ).toList(),
                   ),
                   const SizedBox(height: 12),
                   Text(
-                    "Designation",
+                    "Date of Birth",
                     style: Theme.of(context).textTheme.bodyMedium,
                     textAlign: TextAlign.start,
                   ),
-                  TextField(
-                    controller: _emailController,
+                  GestureDetector(
+                    onTap: (){
+                      _selectDate(context);
+                      print("pick date");},
+                    child: Container(
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Colors.grey,
+                          width: 1,
+                        ),
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      child: Row(
+                        children: [
+                          const Icon(
+                            Icons.calendar_month_sharp,
+                            color: Colors.grey,
+                          ),
+                          const SizedBox(width: 16),
+                          Text(
+                            "${_selectedDate!.day}/${_selectedDate!.month}/${_selectedDate!.year}",
+                            style: Theme.of(context).textTheme.bodyMedium,
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
+
                   const SizedBox(height: 12),
-                   Text(
+                  Text(
                     "Password",
                     style: Theme.of(context).textTheme.bodyMedium,
                     textAlign: TextAlign.start,
@@ -101,7 +180,7 @@ class _RegisterState extends State<Register> {
                     ),
                   ),
                   const SizedBox(height: 12),
-                   Text(
+                  Text(
                     "Confirm Password",
                     style: Theme.of(context).textTheme.bodyMedium,
                     textAlign: TextAlign.start,
@@ -133,14 +212,13 @@ class _RegisterState extends State<Register> {
                   ElevatedButton(
                     onPressed: () {
                       Navigator.of(context).push(
-                        MaterialPageRoute(builder: (context) => const DashBoard()),
+                        MaterialPageRoute(builder: (context) => const Home()),
                       );
                     },
                     child: SizedBox(
                       width: dynamicWidth,
                       child: const Text(
-                        "Register",
-
+                        "Sign Up",
                         textAlign: TextAlign.center,
                       ),
                     ),
@@ -150,7 +228,7 @@ class _RegisterState extends State<Register> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                       Text(
+                      Text(
                         "Have and account?",
                         style: Theme.of(context).textTheme.bodyMedium,
                         textAlign: TextAlign.start,
@@ -159,7 +237,7 @@ class _RegisterState extends State<Register> {
                       GestureDetector(
                         onTap: (){
                           Navigator.of(context).push(
-                            MaterialPageRoute(builder: (context) => const Login()),
+                            MaterialPageRoute(builder: (context) => const SignIn()),
                           );
                         },
                         child: Text(

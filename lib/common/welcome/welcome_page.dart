@@ -1,4 +1,5 @@
 import 'package:Attendance_Monitor/admin/features/auth/auth/pages/login.dart';
+import 'package:Attendance_Monitor/student/features/auth/presentation/pages/signin.dart';
 import 'package:flutter/material.dart';
 
 class Welcome extends StatelessWidget {
@@ -38,28 +39,23 @@ class Welcome extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 24),
-                    const Text(
+                    Text(
                       "Attendance monitoring at your  finger’s tip,  bid farewell to the hassle of manual attendance sheets and embrace the efficiency of digital record-keeping.",
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.white,
-                        fontWeight: FontWeight.w300,
-                        fontStyle: FontStyle.normal,
-                      ),
+                      style: Theme.of(context).textTheme.bodyMedium,
                     ),
                     const SizedBox(height: 36),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         ElevatedButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                  builder: (context) => const SignIn()),
+                            );
+                          },
                           child: const Text(
                             "I’m a Student",
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w300,
-                              fontStyle: FontStyle.normal,
-                            ),
                           ),
                         ),
                         const SizedBox(height: 48),
@@ -72,11 +68,6 @@ class Welcome extends StatelessWidget {
                           },
                           child: const Text(
                             "I’m an Administrator",
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w300,
-                              fontStyle: FontStyle.normal,
-                            ),
                           ),
                         ),
                       ],

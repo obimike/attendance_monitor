@@ -1,7 +1,10 @@
 import 'package:Attendance_Monitor/admin/features/dashboard/pages/addClass.dart';
+import 'package:Attendance_Monitor/admin/features/dashboard/pages/class_detail.dart';
+import 'package:Attendance_Monitor/admin/features/dashboard/pages/student_list.dart';
 import 'package:calendar_timeline/calendar_timeline.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:circle_progress_bar/circle_progress_bar.dart';
 
 class DashBoard extends StatefulWidget {
   const DashBoard({super.key});
@@ -16,18 +19,18 @@ class _DashBoardState extends State<DashBoard> {
 
   late TimeOfDay _selectedTime;
 
-  Future<void> _selectTime(BuildContext context) async {
-    final TimeOfDay? pickedTime = await showTimePicker(
-      context: context,
-      initialTime: _selectedTime,
-    );
-
-    if (pickedTime != null && pickedTime != _selectedTime) {
-      setState(() {
-        _selectedTime = pickedTime;
-      });
-    }
-  }
+  // Future<void> _selectTime(BuildContext context) async {
+  //   final TimeOfDay? pickedTime = await showTimePicker(
+  //     context: context,
+  //     initialTime: _selectedTime,
+  //   );
+  //
+  //   if (pickedTime != null && pickedTime != _selectedTime) {
+  //     setState(() {
+  //       _selectedTime = pickedTime;
+  //     });
+  //   }
+  // }
 
   final TextEditingController _currentPasswordController =
       TextEditingController();
@@ -170,11 +173,6 @@ class _DashBoardState extends State<DashBoard> {
                       width: MediaQuery.of(context).size.width,
                       child: const Text(
                         "Submit Changes",
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w300,
-                          fontStyle: FontStyle.normal,
-                        ),
                         textAlign: TextAlign.center,
                       ),
                     ),
@@ -187,12 +185,6 @@ class _DashBoardState extends State<DashBoard> {
       },
     );
   }
-
-
-  final List<String> _options = ['Everyday', 'Sunday', 'Monday', 'Tuesday'];
-
-
-  bool _isChecked = false;
 
   @override
   Widget build(BuildContext context) {
@@ -228,8 +220,10 @@ class _DashBoardState extends State<DashBoard> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  statCard(context),
-                  statCard(context),
+                  statCard(
+                      context, "Total Students", "2801", Icons.groups_outlined),
+                  statCard(context, "Total Attendance", "890/1990",
+                      Icons.south_west_sharp),
                 ],
               ),
               const SizedBox(
@@ -238,8 +232,10 @@ class _DashBoardState extends State<DashBoard> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  statCard(context),
-                  statCard(context),
+                  statCard(context, "Avg Checked In", "8:39am",
+                      Icons.south_west_sharp),
+                  statCard(context, "Avg Checked Out", "5:01pm",
+                      Icons.north_east_sharp),
                 ],
               ),
               const SizedBox(
@@ -266,7 +262,7 @@ class _DashBoardState extends State<DashBoard> {
               CalendarTimeline(
                 // showYears: true,
                 initialDate: _selectedDate,
-                firstDate: DateTime.now(),
+                firstDate: DateTime(2023),
                 lastDate: DateTime.now().add(const Duration(days: 365 * 4)),
                 onDateSelected: (date) => _onDateSelect(date),
                 leftMargin: 20,
@@ -282,28 +278,19 @@ class _DashBoardState extends State<DashBoard> {
               const SizedBox(
                 height: 24,
               ),
-              // const Center(
-              //   child: CircleAvatar(
-              //     radius: 96,
-              //     backgroundColor: Colors.white,
-              //     child: Center(
-              //       child: Column(
-              //         mainAxisAlignment: MainAxisAlignment.center,
-              //         children: [
-              //           Text(
-              //             "65%",
-              //             style: TextStyle(color: Colors.black, fontSize: 48),
-              //           ),
-              //           Text(
-              //             "Attendance",
-              //             style: TextStyle(color: Colors.black, fontSize: 16),
-              //           ),
-              //         ],
-              //       ),
-              //     ),
-              //   ),
-              // ),
-
+              const SizedBox(height: 16),
+              Center(
+                child: SizedBox(
+                  width: 180,
+                  child: CircleProgressBar(
+                    strokeWidth: 8,
+                    foregroundColor: Colors.redAccent,
+                    backgroundColor: Colors.white,
+                    value: 0.65,
+                    child: attendancePercentage(),
+                  ),
+                ),
+              ),
             ],
           ),
         ),
@@ -383,7 +370,10 @@ class _DashBoardState extends State<DashBoard> {
                 style: TextStyle(color: Colors.black, fontSize: 18),
               ),
               onTap: () {
-                // Handle Home navigation
+                Navigator.of(context).pop();
+                Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => const StudentList()),
+                );
               },
             ),
             ListTile(
@@ -397,6 +387,20 @@ class _DashBoardState extends State<DashBoard> {
                 Navigator.of(context).pop();
                 Navigator.of(context).push(
                   MaterialPageRoute(builder: (context) => const AddClass()),
+                );
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.class_sharp),
+              title: const Text(
+                'Class Detail',
+                style: TextStyle(color: Colors.black, fontSize: 18),
+              ),
+              onTap: () {
+                // Handle Home navigation
+                Navigator.of(context).pop();
+                Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => const ClassDetail()),
                 );
               },
             ),
@@ -420,77 +424,61 @@ class _DashBoardState extends State<DashBoard> {
     ));
   }
 
-  Widget statCard(context) {
+  Widget statCard(
+      BuildContext context, String title, String score, IconData icon) {
     return Container(
       padding: const EdgeInsets.all(12),
+      width: 180,
       decoration: const BoxDecoration(
           color: Colors.black,
           borderRadius: BorderRadius.all(Radius.circular(8))),
-      child: Row(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Icon(
-            Icons.group_sharp,
-            color: Colors.white,
-            size: 48,
-          ),
-          const SizedBox(
-            width: 12,
-          ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
+          Row(
             children: [
+              Icon(
+                icon,
+                color: Colors.white,
+                size: 36,
+              ),
+              const SizedBox(
+                width: 24,
+              ),
               Text(
-                "1900",
+                score,
                 style: Theme.of(context).textTheme.bodyMedium,
                 textAlign: TextAlign.start,
               ),
-              const SizedBox(
-                height: 10,
-              ),
-              Text(
-                "Total Students",
-                style: Theme.of(context).textTheme.bodySmall,
-                textAlign: TextAlign.start,
-              ),
             ],
-          )
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          Text(
+            title,
+            style: Theme.of(context).textTheme.bodySmall,
+            textAlign: TextAlign.start,
+          ),
         ],
       ),
     );
   }
 
-  Widget studentCard(context) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: const BoxDecoration(
-          color: Colors.black,
-          borderRadius: BorderRadius.all(Radius.circular(8))),
-      child: Row(
+  Widget attendancePercentage() {
+    return const Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const CircleAvatar(
-            radius: 24,
-            backgroundImage: AssetImage('images/user.png'),
+          Text(
+            "65%",
+            style: TextStyle(color: Colors.white, fontSize: 48),
           ),
-          const SizedBox(
-            width: 16,
+          Text(
+            "Attendance",
+            style: TextStyle(color: Colors.white, fontSize: 16),
           ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "Peter Ajose",
-                style: Theme.of(context).textTheme.bodyMedium,
-                textAlign: TextAlign.start,
-              ),
-              Text(
-                "peter_ajose@gmail.com",
-                style: Theme.of(context).textTheme.bodySmall,
-                textAlign: TextAlign.start,
-              ),
-            ],
-          )
         ],
       ),
     );

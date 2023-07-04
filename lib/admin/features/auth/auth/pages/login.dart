@@ -103,48 +103,37 @@ class _LoginState extends State<Login> {
                   width: dynamicWidth,
                   child: const Text(
                     "Login",
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w300,
-                      fontStyle: FontStyle.normal,
-                    ),
                     textAlign: TextAlign.center,
                   ),
                 ),
               ),
               const SizedBox(height: 48),
-              
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-              const Text(
-                "Are you new here?",
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w400,
-                  fontStyle: FontStyle.normal,
-                  color: Colors.white,
-                ),
-                textAlign: TextAlign.start,
-              ),
-              const SizedBox(width: 8),
-              GestureDetector(
-                onTap: (){
-                  Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => const Register()),
-                  );
-                },
-                child: Text(
-                  "Register",
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w400,
-                    fontStyle: FontStyle.normal,
-                    color: Colors.deepOrange[300],
+                  const Text(
+                    "Are you new here?",
+                    textAlign: TextAlign.start,
                   ),
-                  textAlign: TextAlign.start,
-                ),
-              ),
+                  const SizedBox(width: 8),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                            builder: (context) => const Register()),
+                      );
+                    },
+                    child: Text(
+                      "Register",
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w400,
+                        fontStyle: FontStyle.normal,
+                        color: Colors.deepOrange[300],
+                      ),
+                      textAlign: TextAlign.start,
+                    ),
+                  ),
                 ],
               )
             ],

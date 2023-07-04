@@ -1,20 +1,20 @@
-import 'package:Attendance_Monitor/admin/features/auth/auth/pages/login.dart';
-import 'package:Attendance_Monitor/admin/features/dashboard/pages/dashboard.dart';
+import 'package:Attendance_Monitor/student/features/auth/presentation/pages/signup.dart';
 import 'package:flutter/material.dart';
 
-class Register extends StatefulWidget {
-  const Register({super.key});
+class SignIn extends StatefulWidget {
+  const SignIn({super.key});
 
   @override
-  State<Register> createState() => _RegisterState();
+  State<SignIn> createState() => _SignInState();
 }
 
-class _RegisterState extends State<Register> {
-
+class _SignInState extends State<SignIn> {
   final TextEditingController _emailController = TextEditingController();
+
   final TextEditingController _passwordController = TextEditingController();
 
   String get _email => _emailController.text;
+
   String get _password => _passwordController.text;
 
   bool _obscureText = true;
@@ -31,28 +31,29 @@ class _RegisterState extends State<Register> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                   Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                  const Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                     Text(
                       "Attendify",
-                      style: Theme.of(context).textTheme.titleLarge,
+                      style: TextStyle(
+                        fontSize: 36,
+                        fontWeight: FontWeight.w300,
+                        fontStyle: FontStyle.normal,
+                        color: Colors.white,
+                      ),
                     ),
                   ]),
                   const SizedBox(height: 48),
-                   Text(
-                    "Admin Registration",
-                    style: Theme.of(context).textTheme.bodyLarge,
+                  const Text(
+                    "Student Sign In",
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.w300,
+                      fontStyle: FontStyle.normal,
+                      color: Colors.white,
+                    ),
                   ),
                   const SizedBox(height: 48),
                    Text(
-                    "Full Name (Last Name first)",
-                    style: Theme.of(context).textTheme.bodyMedium,
-                    textAlign: TextAlign.start,
-                  ),
-                  TextField(
-                    controller: _emailController,
-                  ),
-                  const SizedBox(height: 12),
-                  Text(
                     "Email ID",
                     style: Theme.of(context).textTheme.bodyMedium,
                     textAlign: TextAlign.start,
@@ -60,26 +61,8 @@ class _RegisterState extends State<Register> {
                   TextField(
                     controller: _emailController,
                   ),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: 24),
                   Text(
-                    "Authorization Key",
-                    style: Theme.of(context).textTheme.bodyMedium,
-                    textAlign: TextAlign.start,
-                  ),
-                  TextField(
-                    controller: _emailController,
-                  ),
-                  const SizedBox(height: 12),
-                  Text(
-                    "Designation",
-                    style: Theme.of(context).textTheme.bodyMedium,
-                    textAlign: TextAlign.start,
-                  ),
-                  TextField(
-                    controller: _emailController,
-                  ),
-                  const SizedBox(height: 12),
-                   Text(
                     "Password",
                     style: Theme.of(context).textTheme.bodyMedium,
                     textAlign: TextAlign.start,
@@ -100,47 +83,17 @@ class _RegisterState extends State<Register> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 12),
-                   Text(
-                    "Confirm Password",
-                    style: Theme.of(context).textTheme.bodyMedium,
-                    textAlign: TextAlign.start,
-                  ),
-                  TextField(
-                    controller: _passwordController,
-                    obscureText: _obscureText,
-                    decoration: InputDecoration(
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                          _obscureText ? Icons.visibility_off : Icons.visibility,
-                        ),
-                        onPressed: () {
-                          setState(() {
-                            _obscureText = !_obscureText;
-                          });
-                        },
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 24),
-                  Text(
-                    "By registering, you’ve agree to our Terms & Conditions and Privacy Policy.",
-                    style: Theme.of(context).textTheme.bodyMedium,
-                    textAlign: TextAlign.start,
-                  ),
-
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 36),
                   ElevatedButton(
                     onPressed: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(builder: (context) => const DashBoard()),
-                      );
+                      // Navigator.of(context).push(
+                      //   MaterialPageRoute(builder: (context) => const Login()),
+                      // );
                     },
                     child: SizedBox(
                       width: dynamicWidth,
-                      child: const Text(
-                        "Register",
-
+                      child:  const Text(
+                        "Sign In",
                         textAlign: TextAlign.center,
                       ),
                     ),
@@ -150,8 +103,8 @@ class _RegisterState extends State<Register> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                       Text(
-                        "Have and account?",
+                      Text(
+                        "Are you new here?",
                         style: Theme.of(context).textTheme.bodyMedium,
                         textAlign: TextAlign.start,
                       ),
@@ -159,11 +112,11 @@ class _RegisterState extends State<Register> {
                       GestureDetector(
                         onTap: (){
                           Navigator.of(context).push(
-                            MaterialPageRoute(builder: (context) => const Login()),
+                            MaterialPageRoute(builder: (context) => const SignUp()),
                           );
                         },
                         child: Text(
-                          "Login",
+                          "Register",
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.w400,
@@ -174,8 +127,7 @@ class _RegisterState extends State<Register> {
                         ),
                       ),
                     ],
-                  ),
-                  const SizedBox(height: 16,),
+                  )
                 ],
               ),
             ),

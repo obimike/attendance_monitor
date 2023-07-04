@@ -20,6 +20,8 @@ dependencies:
   calendar_timeline: ^1.1.2
   intl: ^0.18.1
   multiselect_dropdown_flutter: ^0.0.7
+  circle_progress_bar: ^0.1.2
+  flutter_map: ^5.0.0
 
 dev_dependencies:
   flutter_test:

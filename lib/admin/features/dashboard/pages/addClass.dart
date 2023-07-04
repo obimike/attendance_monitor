@@ -202,11 +202,6 @@ class _AddClassState extends State<AddClass> {
                     width: MediaQuery.of(context).size.width,
                     child: const Text(
                       "Add Class",
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w300,
-                        fontStyle: FontStyle.normal,
-                      ),
                       textAlign: TextAlign.center,
                     ),
                   ),

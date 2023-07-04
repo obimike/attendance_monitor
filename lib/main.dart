@@ -63,15 +63,21 @@ class MyApp extends StatelessWidget {
           contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 12),
         ),
         elevatedButtonTheme: ElevatedButtonThemeData(
-            style: ButtonStyle(
-          padding: MaterialStateProperty.all(
-              const EdgeInsets.symmetric(horizontal: 24, vertical: 16)),
-          shape: MaterialStateProperty.all(
-            const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(8)),
+          style: ButtonStyle(
+            padding: MaterialStateProperty.all(
+                const EdgeInsets.symmetric(horizontal: 24, vertical: 16)),
+            shape: MaterialStateProperty.all(
+              const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(8)),
+              ),
             ),
+            textStyle: MaterialStateProperty.all(
+               const TextStyle(fontWeight: FontWeight.w700, fontSize: 18),
+
+            )
           ),
-        )),
+          
+        ),
         dialogTheme: const DialogTheme(
           backgroundColor: Colors.black,
           surfaceTintColor: Colors.black,
@@ -79,6 +85,7 @@ class MyApp extends StatelessWidget {
             borderRadius: BorderRadius.all(Radius.circular(30)),
           ),
         ),
+
       ),
       home: const Splash(),
     );
