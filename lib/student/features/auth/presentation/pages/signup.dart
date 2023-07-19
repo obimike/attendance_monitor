@@ -100,7 +100,7 @@ class _SignUpState extends State<SignUp> {
                     textAlign: TextAlign.start,
                   ),
                   Row(children: ["Male", "Female"].map((e) => SizedBox(
-                    width: 200,
+                    width: 180,
                     child: ListTile(
                       title: Text(
                        e,
@@ -130,8 +130,7 @@ class _SignUpState extends State<SignUp> {
                   ),
                   GestureDetector(
                     onTap: (){
-                      _selectDate(context);
-                      print("pick date");},
+                      _selectDate(context);},
                     child: Container(
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(

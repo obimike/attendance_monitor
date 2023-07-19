@@ -72,112 +72,114 @@ class _DashBoardState extends State<DashBoard> {
             return Container(
               padding: const EdgeInsets.all(16),
               // width: MediaQuery.of(context).size.width * 0.8,
-              height: MediaQuery.of(context).size.height * 0.7,
+              height: MediaQuery.of(context).size.height * 0.6,
               decoration: const BoxDecoration(
                   // color: Colors.black,
                   borderRadius: BorderRadius.all(Radius.circular(16))),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Align(
-                    alignment: Alignment.center,
-                    child: Text(
-                      "Change Password",
-                      style: Theme.of(context).textTheme.bodyLarge,
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Align(
+                      alignment: Alignment.center,
+                      child: Text(
+                        "Change Password",
+                        style: Theme.of(context).textTheme.bodyLarge,
+                      ),
                     ),
-                  ),
-                  const SizedBox(
-                    height: 48,
-                  ),
-                  Text(
-                    "Current Password",
-                    style: Theme.of(context).textTheme.bodyMedium,
-                  ),
-                  TextField(
-                    controller: _currentPasswordController,
-                    obscureText: _obscureText,
-                    decoration: InputDecoration(
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                          _obscureText
-                              ? Icons.visibility_off
-                              : Icons.visibility,
+                    const SizedBox(
+                      height: 48,
+                    ),
+                    Text(
+                      "Current Password",
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
+                    TextField(
+                      controller: _currentPasswordController,
+                      obscureText: _obscureText,
+                      decoration: InputDecoration(
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            _obscureText
+                                ? Icons.visibility_off
+                                : Icons.visibility,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _obscureText = !_obscureText;
+                            });
+                          },
                         ),
-                        onPressed: () {
-                          setState(() {
-                            _obscureText = !_obscureText;
-                          });
-                        },
                       ),
                     ),
-                  ),
-                  const SizedBox(
-                    height: 16,
-                  ),
-                  Text(
-                    "New Password",
-                    style: Theme.of(context).textTheme.bodyMedium,
-                  ),
-                  TextField(
-                    controller: _newPasswordController,
-                    obscureText: _obscureText,
-                    decoration: InputDecoration(
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                          _obscureText
-                              ? Icons.visibility_off
-                              : Icons.visibility,
+                    const SizedBox(
+                      height: 16,
+                    ),
+                    Text(
+                      "New Password",
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
+                    TextField(
+                      controller: _newPasswordController,
+                      obscureText: _obscureText,
+                      decoration: InputDecoration(
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            _obscureText
+                                ? Icons.visibility_off
+                                : Icons.visibility,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _obscureText = !_obscureText;
+                            });
+                          },
                         ),
-                        onPressed: () {
-                          setState(() {
-                            _obscureText = !_obscureText;
-                          });
-                        },
                       ),
                     ),
-                  ),
-                  const SizedBox(
-                    height: 16,
-                  ),
-                  Text(
-                    "Confirm Password",
-                    style: Theme.of(context).textTheme.bodyMedium,
-                  ),
-                  TextField(
-                    controller: _confirmPasswordController,
-                    obscureText: _obscureText,
-                    decoration: InputDecoration(
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                          _obscureText
-                              ? Icons.visibility_off
-                              : Icons.visibility,
+                    const SizedBox(
+                      height: 16,
+                    ),
+                    Text(
+                      "Confirm Password",
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
+                    TextField(
+                      controller: _confirmPasswordController,
+                      obscureText: _obscureText,
+                      decoration: InputDecoration(
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            _obscureText
+                                ? Icons.visibility_off
+                                : Icons.visibility,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _obscureText = !_obscureText;
+                            });
+                          },
                         ),
-                        onPressed: () {
-                          setState(() {
-                            _obscureText = !_obscureText;
-                          });
-                        },
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 24),
-                  ElevatedButton(
-                    onPressed: () {
-                      // Navigator.of(context).push(
-                      //   MaterialPageRoute(builder: (context) => const DashBoard()),
-                      // );
-                    },
-                    child: SizedBox(
-                      width: MediaQuery.of(context).size.width,
-                      child: const Text(
-                        "Submit Changes",
-                        textAlign: TextAlign.center,
+                    const SizedBox(height: 24),
+                    ElevatedButton(
+                      onPressed: () {
+                        // Navigator.of(context).push(
+                        //   MaterialPageRoute(builder: (context) => const DashBoard()),
+                        // );
+                      },
+                      child: SizedBox(
+                        width: MediaQuery.of(context).size.width,
+                        child: const Text(
+                          "Submit Changes",
+                          textAlign: TextAlign.center,
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             );
           }),

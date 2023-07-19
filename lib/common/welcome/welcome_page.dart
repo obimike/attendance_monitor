@@ -1,4 +1,4 @@
-import 'package:Attendance_Monitor/admin/features/auth/auth/pages/login.dart';
+import 'package:Attendance_Monitor/admin/features/login/login.dart';
 import 'package:Attendance_Monitor/student/features/auth/presentation/pages/signin.dart';
 import 'package:flutter/material.dart';
 
