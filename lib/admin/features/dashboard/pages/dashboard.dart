@@ -410,7 +410,14 @@ class _DashBoardState extends State<DashBoard> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  // FirebaseAuth.instance.signOut();
+                  // Navigator.of(context).pushReplacement(
+                  //   MaterialPageRoute(
+                  //     builder: (BuildContext context) => const Login(),
+                  //   ),
+                  // );
+                },
                 style: ButtonStyle(
                     backgroundColor:
                         MaterialStateProperty.all(Colors.redAccent)),
