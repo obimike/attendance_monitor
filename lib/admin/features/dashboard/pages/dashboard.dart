@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:Attendance_Monitor/admin/features/dashboard/bloc/dashboard_bloc.dart';
 import 'package:Attendance_Monitor/admin/features/dashboard/bloc/dashboard_event.dart';
 import 'package:Attendance_Monitor/admin/features/dashboard/bloc/dashboard_state.dart';
@@ -8,9 +10,13 @@ import 'package:Attendance_Monitor/admin/features/dashboard/pages/student_list.d
 import 'package:Attendance_Monitor/admin/features/dashboard/repository/dashboard_repository.dart';
 import 'package:Attendance_Monitor/admin/features/login/login.dart';
 import 'package:calendar_timeline/calendar_timeline.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:circle_progress_bar/circle_progress_bar.dart';
 
@@ -40,7 +46,6 @@ class _DashBoardState extends State<DashBoard> {
   //   }
   // }
 
-
   @override
   void initState() {
     super.initState();
@@ -59,7 +64,81 @@ class _DashBoardState extends State<DashBoard> {
         () => _formattedDate = DateFormat.yMMMEd().format(date).toString());
   }
 
+  void _updateProfileImage(BuildContext context) async {
+    final ImagePicker picker = ImagePicker();
+    final Reference ref = FirebaseStorage.instance.ref();
+    final db = FirebaseFirestore.instance;
+    final auth = FirebaseAuth.instance;
 
+    // Pick an image.
+    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+
+    print("----------------------------------");
+    print(image?.name);
+    print("----------------------------------");
+
+    final metadata = SettableMetadata(
+      contentType: 'image/jpeg',
+      customMetadata: {'picked-file-path': image!.path},
+    );
+
+    try {
+      final task = await ref
+          .child('admins')
+          .child('/${image.name}')
+          .putFile(File(image.path), metadata);
+
+      final link = (await task.ref.getDownloadURL());
+
+      var _user;
+      var admin;
+
+      await auth.authStateChanges().listen((User? user) {
+        if (user != null) {
+          _user = user;
+          user.updatePhotoURL(link);
+        }
+      });
+
+      await db
+          .collection("admins")
+          .doc(_user.uid)
+          .update({"displayImage": link}).catchError((e) {
+        throw Exception(e.toString());
+      });
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          backgroundColor: Colors.black,
+          content: Text(
+            'Profile Image uploaded Successfully!',
+            style: TextStyle(color: Colors.green, fontSize: 16),
+            textAlign: TextAlign.center,
+          ),
+        ),
+      );
+      SchedulerBinding.instance.addPostFrameCallback((_) {
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (BuildContext context) =>
+            const DashBoard(),
+          ),
+        );
+      });
+    } on FirebaseException catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Colors.black,
+          content: Text(
+            'Error: ${e.message}',
+            style: const TextStyle(color: Colors.redAccent, fontSize: 16),
+            textAlign: TextAlign.center,
+          ),
+        ),
+      );
+      print(e);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -157,6 +236,8 @@ class _DashBoardState extends State<DashBoard> {
                       style: TextStyle(color: Colors.black, fontSize: 18),
                     ),
                     onTap: () {
+                      Navigator.of(context).pop();
+                      _updateProfileImage(context);
                       // Handle Home navigation
                     },
                   ),
