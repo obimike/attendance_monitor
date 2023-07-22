@@ -1,8 +1,15 @@
+import 'package:Attendance_Monitor/admin/features/dashboard/bloc/dashboard_bloc.dart';
+import 'package:Attendance_Monitor/admin/features/dashboard/bloc/dashboard_event.dart';
+import 'package:Attendance_Monitor/admin/features/dashboard/bloc/dashboard_state.dart';
 import 'package:Attendance_Monitor/admin/features/dashboard/pages/addClass.dart';
 import 'package:Attendance_Monitor/admin/features/dashboard/pages/class_detail.dart';
 import 'package:Attendance_Monitor/admin/features/dashboard/pages/student_list.dart';
+import 'package:Attendance_Monitor/admin/features/dashboard/repository/dashboard_repository.dart';
+import 'package:Attendance_Monitor/admin/features/login/login.dart';
 import 'package:calendar_timeline/calendar_timeline.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:circle_progress_bar/circle_progress_bar.dart';
 
@@ -190,247 +197,350 @@ class _DashBoardState extends State<DashBoard> {
 
   @override
   Widget build(BuildContext context) {
-    var dynamicWidth = MediaQuery.of(context).size.width;
     var dynamicHeight = MediaQuery.of(context).size.height;
-    return SafeArea(
-        child: Scaffold(
-      appBar: AppBar(
-        title: Text(
-          "Dashboard",
-          style: Theme.of(context).textTheme.bodyLarge,
-          textAlign: TextAlign.start,
-        ),
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(
-                height: 10,
+    return BlocProvider(
+      create: (context) => DashboardBloc(
+        RepositoryProvider.of<DashboardRepository>(context),
+      )..add(InitEvent()),
+      child: BlocBuilder<DashboardBloc, DashboardState>(
+        builder: (context, state) {
+          if (state is LogOutState) {
+            SchedulerBinding.instance.addPostFrameCallback((_) {
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute(
+                  builder: (BuildContext context) => const Login(),
+                ),
+              );
+            });
+          }
+          return SafeArea(
+              child: Scaffold(
+            appBar: AppBar(
+              title: Text(
+                "Dashboard",
+                style: Theme.of(context).textTheme.bodyLarge,
+                textAlign: TextAlign.start,
               ),
+            ),
+            body: SingleChildScrollView(
+              child: (state is InitialState)
+                  ? (state.data.hasClass!
+                      ? _body(context)
+                      : _noClass(dynamicHeight))
+                  : _loading(dynamicHeight),
+            ),
+            drawer: Drawer(
+              child: ListView(
+                padding: EdgeInsets.zero,
+                children: <Widget>[
+                  Container(
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    decoration: const BoxDecoration(
+                      color: Colors.black,
+                    ),
+                    child: Column(
+                      children: [
+                        (state is InitialState)
+                            ? CircleAvatar(
+                                radius: 60.0,
+                                backgroundColor: Colors.transparent,
+                                backgroundImage:
+                                    const AssetImage('images/user.png'),
+                                foregroundImage: NetworkImage(
+                                    state.data.displayImage.toString()),
+                              )
+                            : const CircleAvatar(
+                                radius: 60,
+                                backgroundImage: AssetImage('images/user.png'),
+                              ),
+                        const SizedBox(height: 12),
+                        Text(
+                          (state is InitialState)
+                              ? state.data.fullName.toString()
+                              : "Peter Parker",
+                          style: Theme.of(context).textTheme.bodyLarge,
+                          textAlign: TextAlign.start,
+                        ),
+                        Text(
+                          (state is InitialState)
+                              ? state.data.designation.toString()
+                              : "Head of Department",
+                          style: Theme.of(context).textTheme.bodyMedium,
+                          textAlign: TextAlign.start,
+                        ),
+                        Text(
+                          (state is InitialState)
+                              ? state.data.email.toString()
+                              : "peter_parker@yahoo.com",
+                          style: Theme.of(context).textTheme.bodyMedium,
+                          textAlign: TextAlign.start,
+                        ),
+                      ],
+                    ),
+                  ),
+                  const ListTile(
+                    title: Text(
+                      "Account Settings",
+                      style: TextStyle(color: Colors.black, fontSize: 18),
+                    ),
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.camera_alt_sharp),
+                    title: const Text(
+                      'Add Profile Image',
+                      style: TextStyle(color: Colors.black, fontSize: 18),
+                    ),
+                    onTap: () {
+                      // Handle Home navigation
+                    },
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.lock_sharp),
+                    title: const Text(
+                      'Change Password',
+                      style: TextStyle(color: Colors.black, fontSize: 18),
+                    ),
+                    onTap: () {
+                      // Handle Home navigation
+                      Navigator.of(context).pop();
+                      showChangePasswordDialog(context);
+                    },
+                  ),
+                  const ListTile(
+                    title: Text(
+                      "Tasks",
+                      style: TextStyle(color: Colors.black, fontSize: 18),
+                    ),
+                  ),
+                  if (state is InitialState)
+                    Visibility(
+                      visible: state.data.hasClass! ? true : false,
+                      child: ListTile(
+                        leading: const Icon(Icons.person_sharp),
+                        title: const Text(
+                          "Student's List",
+                          style: TextStyle(color: Colors.black, fontSize: 18),
+                        ),
+                        onTap: () {
+                          Navigator.of(context).pop();
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                                builder: (context) => const StudentList()),
+                          );
+                        },
+                      ),
+                    ),
+                  if (state is InitialState)
+                    Visibility(
+                      visible: state.data.hasClass! ? false : true,
+                      child: ListTile(
+                        leading: const Icon(Icons.add_sharp),
+                        title: const Text(
+                          'Add  Class',
+                          style: TextStyle(color: Colors.black, fontSize: 18),
+                        ),
+                        onTap: () {
+                          // Handle Home navigation
+                          Navigator.of(context).pop();
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                                builder: (context) => const AddClass()),
+                          );
+                        },
+                      ),
+                    ),
+                  // (state is InitialState)
+                  if (state is InitialState)
+                    Visibility(
+                      visible: state.data.hasClass! ? true : false,
+                      child: ListTile(
+                        leading: const Icon(Icons.class_sharp),
+                        title: const Text(
+                          'Class Detail',
+                          style: TextStyle(color: Colors.black, fontSize: 18),
+                        ),
+                        onTap: () {
+                          // Handle Home navigation
+                          Navigator.of(context).pop();
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                                builder: (context) => const ClassDetail()),
+                          );
+                        },
+                      ),
+                    ),
+                  const SizedBox(height: 48),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        context
+                            .read<DashboardBloc>()
+                            .add(LogOutButtonPressedEvent());
+                      },
+                      style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.all(Colors.redAccent)),
+                      child: const Text(
+                        'Log Out',
+                        style: TextStyle(color: Colors.white, fontSize: 18),
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ));
+        },
+      ),
+    );
+  }
+
+  Widget _body(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SizedBox(
+            height: 10,
+          ),
+          Text(
+            "NUC Students (Overview)",
+            style: Theme.of(context).textTheme.bodyMedium,
+            textAlign: TextAlign.start,
+          ),
+          const SizedBox(
+            height: 16,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              statCard(
+                  context, "Total Students", "2801", Icons.groups_outlined),
+              statCard(context, "Total Attendance", "890/1990",
+                  Icons.south_west_sharp),
+            ],
+          ),
+          const SizedBox(
+            height: 16,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              statCard(
+                  context, "Avg Checked In", "8:39am", Icons.south_west_sharp),
+              statCard(
+                  context, "Avg Checked Out", "5:01pm", Icons.north_east_sharp),
+            ],
+          ),
+          const SizedBox(
+            height: 24,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
               Text(
-                "NUC Students (Overview)",
+                "Today’s Attendance",
                 style: Theme.of(context).textTheme.bodyMedium,
                 textAlign: TextAlign.start,
               ),
-              const SizedBox(
-                height: 16,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  statCard(
-                      context, "Total Students", "2801", Icons.groups_outlined),
-                  statCard(context, "Total Attendance", "890/1990",
-                      Icons.south_west_sharp),
-                ],
-              ),
-              const SizedBox(
-                height: 16,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  statCard(context, "Avg Checked In", "8:39am",
-                      Icons.south_west_sharp),
-                  statCard(context, "Avg Checked Out", "5:01pm",
-                      Icons.north_east_sharp),
-                ],
-              ),
-              const SizedBox(
-                height: 24,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    "Today’s Attendance",
-                    style: Theme.of(context).textTheme.bodyMedium,
-                    textAlign: TextAlign.start,
-                  ),
-                  Text(
-                    _formattedDate.toString(),
-                    style: Theme.of(context).textTheme.bodyMedium,
-                    textAlign: TextAlign.start,
-                  ),
-                ],
-              ),
-              const SizedBox(
-                height: 24,
-              ),
-              CalendarTimeline(
-                // showYears: true,
-                initialDate: _selectedDate,
-                firstDate: DateTime(2023),
-                lastDate: DateTime.now().add(const Duration(days: 365 * 4)),
-                onDateSelected: (date) => _onDateSelect(date),
-                leftMargin: 20,
-                monthColor: Colors.white70,
-                dayColor: Colors.teal[200],
-                dayNameColor: const Color(0xFF333A47),
-                activeDayColor: Colors.white,
-                activeBackgroundDayColor: Colors.redAccent[100],
-                dotsColor: const Color(0xFF333A47),
-                selectableDayPredicate: (date) => date.day != 23,
-                locale: 'en',
-              ),
-              const SizedBox(
-                height: 24,
-              ),
-              const SizedBox(height: 16),
-              Center(
-                child: SizedBox(
-                  width: 180,
-                  child: CircleProgressBar(
-                    strokeWidth: 8,
-                    foregroundColor: Colors.redAccent,
-                    backgroundColor: Colors.white,
-                    value: 0.65,
-                    child: attendancePercentage(),
-                  ),
-                ),
+              Text(
+                _formattedDate.toString(),
+                style: Theme.of(context).textTheme.bodyMedium,
+                textAlign: TextAlign.start,
               ),
             ],
           ),
-        ),
+          const SizedBox(
+            height: 24,
+          ),
+          CalendarTimeline(
+            // showYears: true,
+            initialDate: _selectedDate,
+            firstDate: DateTime(2023),
+            lastDate: DateTime.now().add(const Duration(days: 365 * 4)),
+            onDateSelected: (date) => _onDateSelect(date),
+            leftMargin: 20,
+            monthColor: Colors.white70,
+            dayColor: Colors.teal[200],
+            dayNameColor: const Color(0xFF333A47),
+            activeDayColor: Colors.white,
+            activeBackgroundDayColor: Colors.redAccent[100],
+            dotsColor: const Color(0xFF333A47),
+            selectableDayPredicate: (date) => date.day != 23,
+            locale: 'en',
+          ),
+          const SizedBox(
+            height: 24,
+          ),
+          const SizedBox(height: 16),
+          Center(
+            child: SizedBox(
+              width: 180,
+              child: CircleProgressBar(
+                strokeWidth: 8,
+                foregroundColor: Colors.redAccent,
+                backgroundColor: Colors.white,
+                value: 0.65,
+                child: attendancePercentage(),
+              ),
+            ),
+          ),
+        ],
       ),
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: <Widget>[
-            Container(
-              padding: const EdgeInsets.symmetric(vertical: 16),
-              decoration: const BoxDecoration(
-                color: Colors.black,
-              ),
-              child: Column(
-                children: [
-                  const CircleAvatar(
-                    radius: 60,
-                    backgroundImage: AssetImage('images/user.png'),
-                  ),
-                  const SizedBox(height: 12),
-                  Text(
-                    "Peter Parker",
-                    style: Theme.of(context).textTheme.bodyLarge,
-                    textAlign: TextAlign.start,
-                  ),
-                  Text(
-                    "Head of Department",
-                    style: Theme.of(context).textTheme.bodyMedium,
-                    textAlign: TextAlign.start,
-                  ),
-                  Text(
-                    "peter_parker@yahoo.com",
-                    style: Theme.of(context).textTheme.bodyMedium,
-                    textAlign: TextAlign.start,
-                  ),
-                ],
+    );
+  }
+
+  Widget _noClass(double deviceHeight) {
+    return SizedBox(
+      height: deviceHeight * 0.8,
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Center(
+              child: Image.asset(
+                "images/no_class.png",
+                width: 320,
+                height: 360,
               ),
             ),
-            const ListTile(
-              title: Text(
-                "Account Settings",
-                style: TextStyle(color: Colors.black, fontSize: 18),
-              ),
+            const Text(
+              "You have not class registered yet",
+              style: TextStyle(color: Colors.white, fontSize: 18),
             ),
-            ListTile(
-              leading: const Icon(Icons.camera_alt_sharp),
-              title: const Text(
-                'Add Profile Image',
-                style: TextStyle(color: Colors.black, fontSize: 18),
-              ),
-              onTap: () {
-                // Handle Home navigation
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.lock_sharp),
-              title: const Text(
-                'Change Password',
-                style: TextStyle(color: Colors.black, fontSize: 18),
-              ),
-              onTap: () {
-                // Handle Home navigation
-                Navigator.of(context).pop();
-                showChangePasswordDialog(context);
-              },
-            ),
-            const ListTile(
-              title: Text(
-                "Tasks",
-                style: TextStyle(color: Colors.black, fontSize: 18),
-              ),
-            ),
-            ListTile(
-              leading: const Icon(Icons.person_sharp),
-              title: const Text(
-                "Student's List",
-                style: TextStyle(color: Colors.black, fontSize: 18),
-              ),
-              onTap: () {
-                Navigator.of(context).pop();
-                Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => const StudentList()),
-                );
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.add_sharp),
-              title: const Text(
-                'Add  Class',
-                style: TextStyle(color: Colors.black, fontSize: 18),
-              ),
-              onTap: () {
-                // Handle Home navigation
-                Navigator.of(context).pop();
+            const SizedBox(height: 48),
+            ElevatedButton(
+              onPressed: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(builder: (context) => const AddClass()),
                 );
               },
-            ),
-            ListTile(
-              leading: const Icon(Icons.class_sharp),
-              title: const Text(
-                'Class Detail',
-                style: TextStyle(color: Colors.black, fontSize: 18),
+              child: const Text(
+                "Add Class",
               ),
-              onTap: () {
-                // Handle Home navigation
-                Navigator.of(context).pop();
-                Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => const ClassDetail()),
-                );
-              },
             ),
-            const SizedBox(height: 48),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: ElevatedButton(
-                onPressed: () {
-                  // FirebaseAuth.instance.signOut();
-                  // Navigator.of(context).pushReplacement(
-                  //   MaterialPageRoute(
-                  //     builder: (BuildContext context) => const Login(),
-                  //   ),
-                  // );
-                },
-                style: ButtonStyle(
-                    backgroundColor:
-                        MaterialStateProperty.all(Colors.redAccent)),
-                child: const Text(
-                  'Log Out',
-                  style: TextStyle(color: Colors.white, fontSize: 18),
-                ),
-              ),
-            )
           ],
         ),
       ),
-    ));
+    );
+  }
+
+  Widget _loading(double deviceHeight) {
+    return SizedBox(
+      height: deviceHeight * 0.8,
+      child: const Center(
+        child: SizedBox(
+          height: 64,
+          width: 64,
+          child: CircularProgressIndicator(
+            color: Colors.redAccent,
+          ),
+        ),
+      ),
+    );
   }
 
   Widget statCard(

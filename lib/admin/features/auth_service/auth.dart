@@ -44,6 +44,8 @@ class AuthService {
       "designation": designation,
       "role": "admin",
       "displayImage": "",
+      "hasClass": false,
+      "classID": "",
     };
 
     try {

@@ -4,6 +4,7 @@ import 'package:Attendance_Monitor/admin/features/login/bloc/login_event.dart';
 import 'package:Attendance_Monitor/admin/features/login/bloc/login_state.dart';
 import 'package:Attendance_Monitor/admin/features/signup/register.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../dashboard/pages/dashboard.dart';
@@ -22,13 +23,13 @@ class Login extends StatelessWidget {
       child: BlocBuilder<LoginBloc, LoginState>(
         builder: (context, state) {
           if (state.status == LoginStatus.success) {
-            Navigator.of(context).pushReplacement(
-              MaterialPageRoute(
-                builder: (BuildContext context) => const DashBoard(),
-              ),
-            );
-
-            // print("LoginStatus.success");
+            SchedulerBinding.instance.addPostFrameCallback((_) {
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute(
+                  builder: (BuildContext context) => const DashBoard(),
+                ),
+              );
+            });
           }
           return SafeArea(
               child: Scaffold(

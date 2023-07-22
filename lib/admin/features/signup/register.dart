@@ -5,6 +5,7 @@ import 'package:Attendance_Monitor/admin/features/signup/bloc/signup_bloc.dart';
 import 'package:Attendance_Monitor/admin/features/signup/bloc/signup_event.dart';
 import 'package:Attendance_Monitor/admin/features/signup/bloc/signup_state.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class Register extends StatefulWidget {
@@ -34,7 +35,13 @@ class _RegisterState extends State<Register> {
       child: BlocBuilder<SignupBloc, SignupState>(
         builder: (context, state) {
           if (state.status == SignupStatus.success) {
-            // Navigator.of(context).pushReplacement(Home.route());
+            SchedulerBinding.instance.addPostFrameCallback((_) {
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute(
+                  builder: (BuildContext context) => const DashBoard(),
+                ),
+              );
+            });
             print("SignupStatus.success");
           }
           return SafeArea(
@@ -188,10 +195,6 @@ class _RegisterState extends State<Register> {
                     ),
                     const SizedBox(height: 24),
                     ElevatedButton.icon(
-                      //   Navigator.of(context).push(
-                      //     MaterialPageRoute(
-                      //         builder: (context) => const DashBoard()),
-
                       onPressed: () => (state.status == SignupStatus.loading)
                           ? null
                           : context
