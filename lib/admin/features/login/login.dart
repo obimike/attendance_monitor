@@ -114,20 +114,7 @@ class Login extends StatelessWidget {
                             .add(LoginPasswordChangedEvent(password: value));
                       }),
                       obscureText: true,
-                      // decoration: InputDecoration(
-                      //   suffixIcon: IconButton(
-                      //       icon: Icon(
-                      //         (state is PasswordVisible)
-                      //             ? Icons.visibility_off
-                      //             : Icons.visibility,
-                      //       ),
-                      //       onPressed: () =>
-                      //       {print(state),
-                      //       context
-                      //           .read<AuthBloc>()
-                      //           .add(TogglePasswordVisibilityEvent())
-                      //     },),
-                      // ),
+
                     ),
                     const SizedBox(height: 36),
                     ElevatedButton.icon(

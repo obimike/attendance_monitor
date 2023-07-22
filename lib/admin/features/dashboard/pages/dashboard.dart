@@ -2,6 +2,7 @@ import 'package:Attendance_Monitor/admin/features/dashboard/bloc/dashboard_bloc.
 import 'package:Attendance_Monitor/admin/features/dashboard/bloc/dashboard_event.dart';
 import 'package:Attendance_Monitor/admin/features/dashboard/bloc/dashboard_state.dart';
 import 'package:Attendance_Monitor/admin/features/dashboard/pages/addClass.dart';
+import 'package:Attendance_Monitor/admin/features/dashboard/pages/changePassword.dart';
 import 'package:Attendance_Monitor/admin/features/dashboard/pages/class_detail.dart';
 import 'package:Attendance_Monitor/admin/features/dashboard/pages/student_list.dart';
 import 'package:Attendance_Monitor/admin/features/dashboard/repository/dashboard_repository.dart';
@@ -39,17 +40,6 @@ class _DashBoardState extends State<DashBoard> {
   //   }
   // }
 
-  final TextEditingController _currentPasswordController =
-      TextEditingController();
-  final TextEditingController _newPasswordController = TextEditingController();
-  final TextEditingController _confirmPasswordController =
-      TextEditingController();
-
-  String get _confirmPassword => _confirmPasswordController.text;
-  String get _newPassword => _newPasswordController.text;
-  String get _currentPassword => _currentPasswordController.text;
-
-  bool _obscureText = true;
 
   @override
   void initState() {
@@ -69,131 +59,7 @@ class _DashBoardState extends State<DashBoard> {
         () => _formattedDate = DateFormat.yMMMEd().format(date).toString());
   }
 
-  void showChangePasswordDialog(context) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          content: StatefulBuilder(
-              builder: (BuildContext context, StateSetter setState) {
-            return Container(
-              padding: const EdgeInsets.all(16),
-              // width: MediaQuery.of(context).size.width * 0.8,
-              height: MediaQuery.of(context).size.height * 0.6,
-              decoration: const BoxDecoration(
-                  // color: Colors.black,
-                  borderRadius: BorderRadius.all(Radius.circular(16))),
-              child: SingleChildScrollView(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Align(
-                      alignment: Alignment.center,
-                      child: Text(
-                        "Change Password",
-                        style: Theme.of(context).textTheme.bodyLarge,
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 48,
-                    ),
-                    Text(
-                      "Current Password",
-                      style: Theme.of(context).textTheme.bodyMedium,
-                    ),
-                    TextField(
-                      controller: _currentPasswordController,
-                      obscureText: _obscureText,
-                      decoration: InputDecoration(
-                        suffixIcon: IconButton(
-                          icon: Icon(
-                            _obscureText
-                                ? Icons.visibility_off
-                                : Icons.visibility,
-                          ),
-                          onPressed: () {
-                            setState(() {
-                              _obscureText = !_obscureText;
-                            });
-                          },
-                        ),
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 16,
-                    ),
-                    Text(
-                      "New Password",
-                      style: Theme.of(context).textTheme.bodyMedium,
-                    ),
-                    TextField(
-                      controller: _newPasswordController,
-                      obscureText: _obscureText,
-                      decoration: InputDecoration(
-                        suffixIcon: IconButton(
-                          icon: Icon(
-                            _obscureText
-                                ? Icons.visibility_off
-                                : Icons.visibility,
-                          ),
-                          onPressed: () {
-                            setState(() {
-                              _obscureText = !_obscureText;
-                            });
-                          },
-                        ),
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 16,
-                    ),
-                    Text(
-                      "Confirm Password",
-                      style: Theme.of(context).textTheme.bodyMedium,
-                    ),
-                    TextField(
-                      controller: _confirmPasswordController,
-                      obscureText: _obscureText,
-                      decoration: InputDecoration(
-                        suffixIcon: IconButton(
-                          icon: Icon(
-                            _obscureText
-                                ? Icons.visibility_off
-                                : Icons.visibility,
-                          ),
-                          onPressed: () {
-                            setState(() {
-                              _obscureText = !_obscureText;
-                            });
-                          },
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 24),
-                    ElevatedButton(
-                      onPressed: () {
-                        // Navigator.of(context).push(
-                        //   MaterialPageRoute(builder: (context) => const DashBoard()),
-                        // );
-                      },
-                      child: SizedBox(
-                        width: MediaQuery.of(context).size.width,
-                        child: const Text(
-                          "Submit Changes",
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            );
-          }),
-        );
-      },
-    );
-  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -303,7 +169,10 @@ class _DashBoardState extends State<DashBoard> {
                     onTap: () {
                       // Handle Home navigation
                       Navigator.of(context).pop();
-                      showChangePasswordDialog(context);
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                            builder: (context) => const ChangePassword()),
+                      );
                     },
                   ),
                   const ListTile(
@@ -345,7 +214,8 @@ class _DashBoardState extends State<DashBoard> {
                           SchedulerBinding.instance.addPostFrameCallback((_) {
                             Navigator.of(context).pushReplacement(
                               MaterialPageRoute(
-                                builder: (BuildContext context) => const AddClass(),
+                                builder: (BuildContext context) =>
+                                    const AddClass(),
                               ),
                             );
                           });
