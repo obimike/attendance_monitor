@@ -16,8 +16,6 @@ class AddClass extends StatefulWidget {
 }
 
 class _AddClassState extends State<AddClass> {
-  List<dynamic> _selectedDays = [];
-
   late TimeOfDay _selectedCheckInTime, _selectedCheckOutTime;
 
   Future<void> _selectCheckInTime(BuildContext context) async {
@@ -72,8 +70,8 @@ class _AddClassState extends State<AddClass> {
                 body: Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: _onSuccess(dynamicHeight),
-                  ),
                 ),
+              ),
             );
           } else {
             return SafeArea(
@@ -248,7 +246,6 @@ class _AddClassState extends State<AddClass> {
                             ],
                             initiallySelected: const [],
                             onChange: (newList) {
-                              _selectedDays = newList;
                               context
                                   .read<AddClassBloc>()
                                   .add(DaysChangedEvent(days: newList));
@@ -308,7 +305,11 @@ class _AddClassState extends State<AddClass> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-           const Icon(Icons.gpp_good_outlined, size: 256, color: Colors.white,),
+            const Icon(
+              Icons.gpp_good_outlined,
+              size: 256,
+              color: Colors.white,
+            ),
             const Text(
               "Class Added Successfully!",
               style: TextStyle(color: Colors.white, fontSize: 24),

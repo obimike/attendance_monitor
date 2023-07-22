@@ -342,10 +342,13 @@ class _DashBoardState extends State<DashBoard> {
                         onTap: () {
                           // Handle Home navigation
                           Navigator.of(context).pop();
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                                builder: (context) => const AddClass()),
-                          );
+                          SchedulerBinding.instance.addPostFrameCallback((_) {
+                            Navigator.of(context).pushReplacement(
+                              MaterialPageRoute(
+                                builder: (BuildContext context) => const AddClass(),
+                              ),
+                            );
+                          });
                         },
                       ),
                     ),

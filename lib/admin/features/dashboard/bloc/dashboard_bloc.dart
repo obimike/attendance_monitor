@@ -25,6 +25,10 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
       final userData = await _dashboardRepository.fetchUserData();
       // await _dashboardRepository.fetchUserData();
       await prefs.setBool("hasClass", userData.hasClass!);
+      if( userData.hasClass!){
+        await prefs.setString("classID", userData.classID!);
+        print("class id set =  ${userData.classID!}");
+      }
       emit(InitialState(data: userData));
     } catch (e) {
       print(e);
