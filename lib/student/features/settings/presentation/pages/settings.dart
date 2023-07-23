@@ -86,7 +86,9 @@ class Settings extends StatelessWidget {
                   ),
                   Center(
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+
+                      },
                       child: const Text(
                         "Log Out",
                         textAlign: TextAlign.center,

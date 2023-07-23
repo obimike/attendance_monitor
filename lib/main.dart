@@ -4,6 +4,7 @@ import 'package:Attendance_Monitor/admin/features/dashboard/repository/classDeta
 import 'package:Attendance_Monitor/admin/features/dashboard/repository/dashboard_repository.dart';
 import 'package:Attendance_Monitor/admin/features/dashboard/repository/studentList_repository.dart';
 import 'package:Attendance_Monitor/common/splash_page.dart';
+import 'package:Attendance_Monitor/student/features/auth/data/repositories/student_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -42,6 +43,9 @@ class MyApp extends StatelessWidget {
         ),
         RepositoryProvider(
           create: (context) => StudentListRepository(),
+        ),
+        RepositoryProvider(
+          create: (context) => StudentAuthRepository(),
         ),
       ],
       child: MaterialApp(

@@ -49,33 +49,35 @@ class AuthService {
     };
 
     try {
-      print(authKey);
       final db = FirebaseFirestore.instance;
+      final auth = FirebaseAuth.instance;
 
-      final authRef = db.collection("authorization");
-      final query = authRef.where("keys", arrayContains: authKey);
-      await query
+      final dbRef = await db
+          .collection("authorization")
+          .where("keys", arrayContains: authKey)
           .get()
-          .then((value) => {
-                if (value.size <= 0)
-                  {throw ('Invalid Authorization Key.')}
-                else
-                  FirebaseAuth.instance
-                      .createUserWithEmailAndPassword(
-                        email: email,
-                        password: password,
-                      )
-                      .then((value) => {
-                            print(value.user?.uid),
-                            value.user?.updateDisplayName(fullName),
-                            db
-                                .collection("admins")
-                                .doc(value.user?.uid)
-                                .set(user)
-                                .onError((e, _) => throw (e.toString()))
-                          }),
-              })
-          .catchError((e) => {throw (e.toString())});
+          .then((value) {
+        return value.size;
+      });
+
+      if (dbRef <= 0) {
+        throw ('Invalid Authorization Key.');
+      }
+
+      final authRef = await auth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+
+      final id = authRef.user?.uid;
+
+      await authRef.user?.updateDisplayName(fullName);
+
+      await db
+          .collection("admins")
+          .doc(id)
+          .set(user)
+          .onError((e, _) => throw (e.toString()));
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         throw ('The password provided is too weak.');

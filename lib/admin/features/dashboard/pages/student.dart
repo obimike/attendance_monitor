@@ -1,32 +1,37 @@
 import 'package:Attendance_Monitor/admin/features/dashboard/data/studentList.dart';
 import 'package:flutter/material.dart';
 import 'package:circle_progress_bar/circle_progress_bar.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class Student extends StatelessWidget {
   final StudentListModel user;
 
- const Student({required this.user, super.key});
+  const Student({required this.user, super.key});
 
+  void sendEmail() async {
+    String email = Uri.encodeComponent(user.email);
+    Uri mail = Uri.parse("mailto:$email?subject=''&body=''");
+    await launchUrl(mail);
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "Back",
+          "Student Profile",
           style: Theme.of(context).textTheme.bodyLarge,
           textAlign: TextAlign.start,
         ),
       ),
       body: SingleChildScrollView(
-
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             // crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-               Center(
+              Center(
                 child: CircleAvatar(
                   radius: 90,
                   foregroundImage: NetworkImage(user.imageUrl.toString()),
@@ -35,12 +40,12 @@ class Student extends StatelessWidget {
               ),
               const SizedBox(height: 12),
               Text(
-               user.name,
+                user.name,
                 style: Theme.of(context).textTheme.bodyMedium,
                 textAlign: TextAlign.start,
               ),
               Text(
-               user.email,
+                user.email,
                 style: Theme.of(context).textTheme.bodySmall,
                 textAlign: TextAlign.start,
               ),
@@ -55,7 +60,7 @@ class Student extends StatelessWidget {
                 textAlign: TextAlign.start,
               ),
               Text(
-                  user.dob,
+                user.dob,
                 style: Theme.of(context).textTheme.bodySmall,
                 textAlign: TextAlign.start,
               ),
@@ -92,9 +97,7 @@ class Student extends StatelessWidget {
               const SizedBox(height: 24),
               ElevatedButton(
                 onPressed: () {
-                  // Navigator.of(context).push(
-                  //   MaterialPageRoute(builder: (context) => const DashBoard()),
-                  // );
+                  sendEmail();
                 },
                 style: ButtonStyle(
                     padding:
@@ -109,7 +112,7 @@ class Student extends StatelessWidget {
                         color: Colors.black,
                         size: 24,
                       ),
-                      SizedBox(width: 8),
+                      SizedBox(width: 16),
                       Text(
                         "Email Student",
                         textAlign: TextAlign.center,

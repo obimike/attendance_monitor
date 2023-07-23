@@ -16,11 +16,6 @@ class Register extends StatefulWidget {
 }
 
 class _RegisterState extends State<Register> {
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-
-  String get _email => _emailController.text;
-  String get _password => _passwordController.text;
 
   bool _obscureText = true;
 
@@ -165,7 +160,6 @@ class _RegisterState extends State<Register> {
                       textAlign: TextAlign.start,
                     ),
                     TextField(
-                      controller: _passwordController,
                       obscureText: _obscureText,
                       onChanged: ((value) {
                         context.read<SignupBloc>().add(
