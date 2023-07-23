@@ -1,8 +1,12 @@
+import 'package:Attendance_Monitor/admin/features/dashboard/data/studentList.dart';
 import 'package:flutter/material.dart';
 import 'package:circle_progress_bar/circle_progress_bar.dart';
 
 class Student extends StatelessWidget {
-  const Student({super.key});
+  final StudentListModel user;
+
+ const Student({required this.user, super.key});
+
 
   @override
   Widget build(BuildContext context) {
@@ -15,41 +19,43 @@ class Student extends StatelessWidget {
         ),
       ),
       body: SingleChildScrollView(
+
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             // crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const Center(
+               Center(
                 child: CircleAvatar(
                   radius: 90,
-                  backgroundImage: AssetImage('images/user.png'),
+                  foregroundImage: NetworkImage(user.imageUrl.toString()),
+                  backgroundImage: const AssetImage('images/user.png'),
                 ),
               ),
               const SizedBox(height: 12),
               Text(
-                "Natashia Khaleria",
+               user.name,
                 style: Theme.of(context).textTheme.bodyMedium,
                 textAlign: TextAlign.start,
               ),
               Text(
-                "Male",
+               user.email,
                 style: Theme.of(context).textTheme.bodySmall,
                 textAlign: TextAlign.start,
               ),
               Text(
-                "Head of Department",
+                user.department,
                 style: Theme.of(context).textTheme.bodySmall,
                 textAlign: TextAlign.start,
               ),
               Text(
-                "natashia_khaleria@gmail.com",
+                user.gender,
                 style: Theme.of(context).textTheme.bodySmall,
                 textAlign: TextAlign.start,
               ),
               Text(
-                "22nd January, 1999",
+                  user.dob,
                 style: Theme.of(context).textTheme.bodySmall,
                 textAlign: TextAlign.start,
               ),

@@ -2,6 +2,7 @@ import 'package:Attendance_Monitor/admin/features/auth_service/auth.dart';
 import 'package:Attendance_Monitor/admin/features/dashboard/repository/addClass_repository.dart';
 import 'package:Attendance_Monitor/admin/features/dashboard/repository/classDetails_repository.dart';
 import 'package:Attendance_Monitor/admin/features/dashboard/repository/dashboard_repository.dart';
+import 'package:Attendance_Monitor/admin/features/dashboard/repository/studentList_repository.dart';
 import 'package:Attendance_Monitor/common/splash_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -38,6 +39,9 @@ class MyApp extends StatelessWidget {
         ),
         RepositoryProvider(
           create: (context) => ClassDetailsRepository(),
+        ),
+        RepositoryProvider(
+          create: (context) => StudentListRepository(),
         ),
       ],
       child: MaterialApp(

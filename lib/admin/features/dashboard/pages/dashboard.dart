@@ -6,10 +6,10 @@ import 'package:Attendance_Monitor/admin/features/dashboard/bloc/dashboard_state
 import 'package:Attendance_Monitor/admin/features/dashboard/pages/addClass.dart';
 import 'package:Attendance_Monitor/admin/features/dashboard/pages/changePassword.dart';
 import 'package:Attendance_Monitor/admin/features/dashboard/pages/class_detail.dart';
+import 'package:Attendance_Monitor/admin/features/dashboard/pages/dashboard_body.dart';
 import 'package:Attendance_Monitor/admin/features/dashboard/pages/student_list.dart';
 import 'package:Attendance_Monitor/admin/features/dashboard/repository/dashboard_repository.dart';
 import 'package:Attendance_Monitor/admin/features/login/login.dart';
-import 'package:calendar_timeline/calendar_timeline.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -17,8 +17,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:intl/intl.dart';
-import 'package:circle_progress_bar/circle_progress_bar.dart';
 
 class DashBoard extends StatefulWidget {
   const DashBoard({super.key});
@@ -28,41 +26,6 @@ class DashBoard extends StatefulWidget {
 }
 
 class _DashBoardState extends State<DashBoard> {
-  late DateTime _selectedDate;
-  late String _formattedDate;
-
-  late TimeOfDay _selectedTime;
-
-  // Future<void> _selectTime(BuildContext context) async {
-  //   final TimeOfDay? pickedTime = await showTimePicker(
-  //     context: context,
-  //     initialTime: _selectedTime,
-  //   );
-  //
-  //   if (pickedTime != null && pickedTime != _selectedTime) {
-  //     setState(() {
-  //       _selectedTime = pickedTime;
-  //     });
-  //   }
-  // }
-
-  @override
-  void initState() {
-    super.initState();
-    _resetSelectedDate();
-  }
-
-  void _resetSelectedDate() {
-    _selectedDate = DateTime.now();
-    _formattedDate = DateFormat.yMMMEd().format(DateTime.now());
-    _selectedTime = TimeOfDay.now();
-  }
-
-  void _onDateSelect(date) {
-    setState(() => _selectedDate = date);
-    setState(
-        () => _formattedDate = DateFormat.yMMMEd().format(date).toString());
-  }
 
   void _updateProfileImage(BuildContext context) async {
     final ImagePicker picker = ImagePicker();
@@ -72,10 +35,6 @@ class _DashBoardState extends State<DashBoard> {
 
     // Pick an image.
     final XFile? image = await picker.pickImage(source: ImageSource.gallery);
-
-    print("----------------------------------");
-    print(image?.name);
-    print("----------------------------------");
 
     final metadata = SettableMetadata(
       contentType: 'image/jpeg',
@@ -91,7 +50,6 @@ class _DashBoardState extends State<DashBoard> {
       final link = (await task.ref.getDownloadURL());
 
       var _user;
-      var admin;
 
       await auth.authStateChanges().listen((User? user) {
         if (user != null) {
@@ -136,9 +94,9 @@ class _DashBoardState extends State<DashBoard> {
           ),
         ),
       );
-      print(e);
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -170,7 +128,7 @@ class _DashBoardState extends State<DashBoard> {
             body: SingleChildScrollView(
               child: (state is InitialState)
                   ? (state.data.hasClass!
-                      ? _body(context)
+                      ?  DashBoardBody()
                       : _noClass(dynamicHeight))
                   : _loading(dynamicHeight),
             ),
@@ -350,102 +308,6 @@ class _DashBoardState extends State<DashBoard> {
     );
   }
 
-  Widget _body(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SizedBox(
-            height: 10,
-          ),
-          Text(
-            "NUC Students (Overview)",
-            style: Theme.of(context).textTheme.bodyMedium,
-            textAlign: TextAlign.start,
-          ),
-          const SizedBox(
-            height: 16,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              statCard(
-                  context, "Total Students", "2801", Icons.groups_outlined),
-              statCard(context, "Total Attendance", "890/1990",
-                  Icons.south_west_sharp),
-            ],
-          ),
-          const SizedBox(
-            height: 16,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              statCard(
-                  context, "Avg Checked In", "8:39am", Icons.south_west_sharp),
-              statCard(
-                  context, "Avg Checked Out", "5:01pm", Icons.north_east_sharp),
-            ],
-          ),
-          const SizedBox(
-            height: 24,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                "Today’s Attendance",
-                style: Theme.of(context).textTheme.bodyMedium,
-                textAlign: TextAlign.start,
-              ),
-              Text(
-                _formattedDate.toString(),
-                style: Theme.of(context).textTheme.bodyMedium,
-                textAlign: TextAlign.start,
-              ),
-            ],
-          ),
-          const SizedBox(
-            height: 24,
-          ),
-          CalendarTimeline(
-            // showYears: true,
-            initialDate: _selectedDate,
-            firstDate: DateTime(2023),
-            lastDate: DateTime.now().add(const Duration(days: 365 * 4)),
-            onDateSelected: (date) => _onDateSelect(date),
-            leftMargin: 20,
-            monthColor: Colors.white70,
-            dayColor: Colors.teal[200],
-            dayNameColor: const Color(0xFF333A47),
-            activeDayColor: Colors.white,
-            activeBackgroundDayColor: Colors.redAccent[100],
-            dotsColor: const Color(0xFF333A47),
-            selectableDayPredicate: (date) => date.day != 23,
-            locale: 'en',
-          ),
-          const SizedBox(
-            height: 24,
-          ),
-          const SizedBox(height: 16),
-          Center(
-            child: SizedBox(
-              width: 180,
-              child: CircleProgressBar(
-                strokeWidth: 8,
-                foregroundColor: Colors.redAccent,
-                backgroundColor: Colors.white,
-                value: 0.65,
-                child: attendancePercentage(),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 
   Widget _noClass(double deviceHeight) {
     return SizedBox(
@@ -497,63 +359,4 @@ class _DashBoardState extends State<DashBoard> {
     );
   }
 
-  Widget statCard(
-      BuildContext context, String title, String score, IconData icon) {
-    return Container(
-      padding: const EdgeInsets.all(12),
-      width: 180,
-      decoration: const BoxDecoration(
-          color: Colors.black,
-          borderRadius: BorderRadius.all(Radius.circular(8))),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Icon(
-                icon,
-                color: Colors.white,
-                size: 36,
-              ),
-              const SizedBox(
-                width: 24,
-              ),
-              Text(
-                score,
-                style: Theme.of(context).textTheme.bodyMedium,
-                textAlign: TextAlign.start,
-              ),
-            ],
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          Text(
-            title,
-            style: Theme.of(context).textTheme.bodySmall,
-            textAlign: TextAlign.start,
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget attendancePercentage() {
-    return const Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            "65%",
-            style: TextStyle(color: Colors.white, fontSize: 48),
-          ),
-          Text(
-            "Attendance",
-            style: TextStyle(color: Colors.white, fontSize: 16),
-          ),
-        ],
-      ),
-    );
-  }
 }
