@@ -16,13 +16,6 @@ class SignIn extends StatefulWidget {
 }
 
 class _SignInState extends State<SignIn> {
-  final TextEditingController _emailController = TextEditingController();
-
-  final TextEditingController _passwordController = TextEditingController();
-
-  String get _email => _emailController.text;
-
-  String get _password => _passwordController.text;
 
   bool _obscureText = true;
 

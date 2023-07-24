@@ -1,8 +1,11 @@
+import 'package:Attendance_Monitor/student/features/auth/presentation/pages/signin.dart';
 import 'package:Attendance_Monitor/student/features/settings/presentation/pages/change_password.dart';
 import 'package:Attendance_Monitor/student/features/settings/presentation/pages/feedback.dart';
 import 'package:Attendance_Monitor/student/features/settings/presentation/pages/privacy.dart';
 import 'package:Attendance_Monitor/student/features/settings/presentation/pages/profile.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 
 class Settings extends StatelessWidget {
   const Settings({super.key});
@@ -87,7 +90,14 @@ class Settings extends StatelessWidget {
                   Center(
                     child: ElevatedButton(
                       onPressed: () {
-
+                        FirebaseAuth.instance.signOut();
+                          SchedulerBinding.instance.addPostFrameCallback((_) {
+                            Navigator.of(context).pushReplacement(
+                              MaterialPageRoute(
+                                builder: (BuildContext context) => const SignIn(),
+                              ),
+                            );
+                          });
                       },
                       child: const Text(
                         "Log Out",

@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:calendar_timeline/calendar_timeline.dart';
 import 'package:intl/intl.dart';
@@ -8,11 +9,21 @@ class HistoryLog extends StatefulWidget {
 
   @override
   State<HistoryLog> createState() => _HistoryLogState();
+
 }
+
+
+
+  // auth.authStateChanges().listen((User? user) {
+  // if (user != null) {return user; }
+  //
+  // });
 
 class _HistoryLogState extends State<HistoryLog> {
   late DateTime _selectedDate;
   late String _formattedDate;
+
+  final auth = FirebaseAuth.instance.currentUser;
 
 
   void _onDateSelect(date) {
@@ -40,9 +51,10 @@ class _HistoryLogState extends State<HistoryLog> {
               padding: const EdgeInsets.all(16.0),
               child: Row(
                 children: [
-                  const CircleAvatar(
+                   CircleAvatar(
                     radius: 24,
-                    backgroundImage: AssetImage('images/user.png'),
+                    foregroundImage: NetworkImage( auth!.photoURL == null ? "" : auth!.photoURL!),
+                    backgroundImage: const AssetImage('images/user.png'),
                   ),
 
                   const SizedBox(width: 12),
@@ -51,10 +63,10 @@ class _HistoryLogState extends State<HistoryLog> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                     Text(
-                      "Natashia Khaleria",
+                      auth!.displayName!,
                       style: Theme.of(context).textTheme.bodyMedium,
                     ),Text(
-                      "natashia_khaleria@gmail.com",
+                        auth!.email!,
                       style: Theme.of(context).textTheme.bodySmall,
                     ),
                   ],)
