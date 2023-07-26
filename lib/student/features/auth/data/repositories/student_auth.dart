@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class StudentAuthRepository {
   Future<void> createUserWithEmailAndPassword({
@@ -73,8 +74,24 @@ class StudentAuthRepository {
   Future<void> signInWithEmailAndPassword(
       {required String email, required String password}) async {
     try {
-      await FirebaseAuth.instance
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+      final user = await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password);
+
+      final db = await FirebaseFirestore.instance
+          .collection("users")
+          .where("studentID", isEqualTo: user.user?.uid)
+          .get();
+
+      if (db.docs.isNotEmpty) {
+        Map<String, dynamic> userData = db.docs.first.data();
+        String cID = userData['classID'];
+        print(cID);
+
+
+        await prefs.setString("classID", cID);
+      }
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         throw ('No user found for that email.');

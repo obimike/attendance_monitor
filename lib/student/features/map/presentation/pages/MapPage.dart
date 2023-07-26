@@ -20,9 +20,10 @@ class _MapPageState extends State<MapPage> {
       body: Stack(
         children: [
           FlutterMap(
+            mapController: mapController,
             options: MapOptions(
               center: LatLng(52.956158, -1.153108),
-              zoom: 14,
+              zoom: 15,
               maxZoom: 18,
             ),
             children: [
@@ -59,9 +60,23 @@ class _MapPageState extends State<MapPage> {
                       isFilled: true
                   ),
                 ],
-              )
+              ),
+              MarkerLayer(
+                markers: [
+                  Marker(
+                    width: 40,
+                    height: 40,
+                    point: const LatLng(52.956, -1.153),
+                    builder: (ctx) => const FlutterLogo(
+                      textColor: Colors.purple,
+                      key: ObjectKey(Colors.purple),
+                    ),
+                  ),
+                ],
+              ),
             ],
           ),
+
           Positioned(
             bottom: 0,
             right: 0,
