@@ -4,13 +4,16 @@ import 'package:Attendance_Monitor/admin/features/dashboard/repository/classDeta
 import 'package:Attendance_Monitor/admin/features/dashboard/repository/dashboard_repository.dart';
 import 'package:Attendance_Monitor/admin/features/dashboard/repository/studentList_repository.dart';
 import 'package:Attendance_Monitor/common/splash_page.dart';
+import 'package:Attendance_Monitor/location_service.dart';
 import 'package:Attendance_Monitor/student/features/auth/data/repositories/student_auth.dart';
 import 'package:Attendance_Monitor/student/features/history/data/repositories/history_repository.dart';
 import 'package:Attendance_Monitor/student/features/settings/data/models/settings_repository.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -18,9 +21,16 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(
-    const MyApp(),
-  );
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  bool isPermitted = await LocationService().getPermission();
+  prefs.setBool('isPermitted', isPermitted);
+  if (isPermitted) {
+    runApp(
+      const MyApp(),
+    );
+  } else {
+    SystemChannels.platform.invokeMethod('SystemNavigator.pop');
+  }
 }
 
 class MyApp extends StatelessWidget {

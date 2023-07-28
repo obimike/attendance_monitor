@@ -26,12 +26,30 @@ class HistoryRepository {
           .doc(classID)
           .get();
 
+
+      if(fetchClass.data()!.isNotEmpty){
+        Map<String, dynamic> _classDoc = fetchClass.data()!;
+        Timestamp cit = _classDoc['cit'];
+        Timestamp cot = _classDoc['cot'];
+        List<String> days = _classDoc['days'];
+        String adminName = _classDoc['adminName'];
+
+        String _cit_ = DateFormat.jm().format(cit.toDate()).toString();
+        String _cot_ = DateFormat.jm().format(cot.toDate()).toString();
+
+        prefs.setString("classCit", _cit_);
+        prefs.setString("classCot", _cot_);
+        prefs.setString("adminName", adminName);
+        prefs.setStringList("classDays", days);
+      }
+
       if (db.docs.isNotEmpty && fetchClass.data()!.isNotEmpty) {
         //Getting class details
         Map<String, dynamic> classDoc = fetchClass.data()!;
         Timestamp cit = classDoc['cit'];
         Timestamp cot = classDoc['cot'];
         // List<String> days = classDoc['days'];
+
 
         String _cit = DateFormat.jm().format(cit.toDate()).toString();
         String _cot = DateFormat.jm().format(cot.toDate()).toString();
@@ -97,6 +115,12 @@ class HistoryRepository {
 
             var percentage = NumberFormat('##0.#', 'en_US');
             print(percentage.format(percentile));
+
+            //store in shared preferences
+            prefs.setBool("hasAttended", true);
+
+            //
+
 
             Map<String, dynamic> processedData = {
               "cit": DateFormat.jm().format(it.toDate()).toString(),
