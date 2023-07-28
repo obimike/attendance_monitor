@@ -9,7 +9,7 @@ import 'package:Attendance_Monitor/admin/features/dashboard/pages/class_detail.d
 import 'package:Attendance_Monitor/admin/features/dashboard/pages/dashboard_body.dart';
 import 'package:Attendance_Monitor/admin/features/dashboard/pages/student_list.dart';
 import 'package:Attendance_Monitor/admin/features/dashboard/repository/dashboard_repository.dart';
-import 'package:Attendance_Monitor/admin/features/login/login.dart';
+import 'package:Attendance_Monitor/common/welcome/welcome_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -111,7 +111,7 @@ class _DashBoardState extends State<DashBoard> {
             SchedulerBinding.instance.addPostFrameCallback((_) {
               Navigator.of(context).pushReplacement(
                 MaterialPageRoute(
-                  builder: (BuildContext context) => const Login(),
+                  builder: (BuildContext context) => const Welcome(),
                 ),
               );
             });
@@ -128,7 +128,7 @@ class _DashBoardState extends State<DashBoard> {
             body: SingleChildScrollView(
               child: (state is InitialState)
                   ? (state.data.hasClass!
-                      ?  DashBoardBody()
+                      ?  const DashBoardBody()
                       : _noClass(dynamicHeight))
                   : _loading(dynamicHeight),
             ),

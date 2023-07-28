@@ -175,9 +175,10 @@ class _HistoryLogState extends State<HistoryLog> {
           height: 16,
         ),
         Text(
-          double.parse(state.percentage) > 0.65
-              ? "On time for class"
-              : "You came late for class",
+          double.parse(state.percentage) > 0.60
+              ? double.parse(state.percentage) > 0.80
+              ? "Excellent attendance duration": "Good attendance duration"
+              : "Poor attendance duration",
           style: Theme.of(context).textTheme.bodyMedium,
           textAlign: TextAlign.start,
         ),

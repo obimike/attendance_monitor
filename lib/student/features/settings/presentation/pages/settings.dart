@@ -1,4 +1,4 @@
-import 'package:Attendance_Monitor/student/features/auth/presentation/pages/signin.dart';
+import 'package:Attendance_Monitor/common/welcome/welcome_page.dart';
 import 'package:Attendance_Monitor/student/features/settings/presentation/pages/change_password.dart';
 import 'package:Attendance_Monitor/student/features/settings/presentation/pages/feedback.dart';
 import 'package:Attendance_Monitor/student/features/settings/presentation/pages/privacy.dart';
@@ -94,7 +94,7 @@ class Settings extends StatelessWidget {
                           SchedulerBinding.instance.addPostFrameCallback((_) {
                             Navigator.of(context).pushReplacement(
                               MaterialPageRoute(
-                                builder: (BuildContext context) => const SignIn(),
+                                builder: (BuildContext context) => const Welcome(),
                               ),
                             );
                           });
