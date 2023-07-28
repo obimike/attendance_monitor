@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class HistoryRepository {
   Future<HistoryState> fetchAttendance() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
     try {
       var data;
       final userid = await FirebaseAuth.instance.currentUser?.uid;
@@ -16,7 +17,6 @@ class HistoryRepository {
           .where("studentID", isEqualTo: userid)
           .get();
 
-      final SharedPreferences prefs = await SharedPreferences.getInstance();
       final String? classID = prefs.getString('classID');
 
       print("classid = $classID");
@@ -26,13 +26,14 @@ class HistoryRepository {
           .doc(classID)
           .get();
 
-
-      if(fetchClass.data()!.isNotEmpty){
+      if (fetchClass.data()!.isNotEmpty) {
         Map<String, dynamic> _classDoc = fetchClass.data()!;
         Timestamp cit = _classDoc['cit'];
         Timestamp cot = _classDoc['cot'];
-        List<String> days = _classDoc['days'];
+        List<dynamic> days_ = _classDoc['days'];
+        List<String> days = days_.map((element) => element.toString()).toList();
         String adminName = _classDoc['adminName'];
+        String name = _classDoc['name'];
 
         String _cit_ = DateFormat.jm().format(cit.toDate()).toString();
         String _cot_ = DateFormat.jm().format(cot.toDate()).toString();
@@ -41,6 +42,10 @@ class HistoryRepository {
         prefs.setString("classCot", _cot_);
         prefs.setString("adminName", adminName);
         prefs.setStringList("classDays", days);
+        prefs.setString("className", name);
+
+        prefs.setString("classCotTimestamp", cot.toDate().toString());
+        prefs.setString("classCitTimestamp", cit.toDate().toString());
       }
 
       if (db.docs.isNotEmpty && fetchClass.data()!.isNotEmpty) {
@@ -49,7 +54,6 @@ class HistoryRepository {
         Timestamp cit = classDoc['cit'];
         Timestamp cot = classDoc['cot'];
         // List<String> days = classDoc['days'];
-
 
         String _cit = DateFormat.jm().format(cit.toDate()).toString();
         String _cot = DateFormat.jm().format(cot.toDate()).toString();
@@ -121,7 +125,6 @@ class HistoryRepository {
 
             //
 
-
             Map<String, dynamic> processedData = {
               "cit": DateFormat.jm().format(it.toDate()).toString(),
               "cot": DateFormat.jm().format(ot.toDate()).toString(),
@@ -137,11 +140,12 @@ class HistoryRepository {
 
       return data;
     } catch (e) {
+      prefs.setBool("hasAttended", false);
       throw (e.toString());
     }
   }
 
-  Future<HistoryState> fetchDateAttendance(SelectDateEvent event) async  {
+  Future<HistoryState> fetchDateAttendance(SelectDateEvent event) async {
     try {
       var data;
       final userid = await FirebaseAuth.instance.currentUser?.uid;

@@ -300,7 +300,7 @@ class Profile extends StatelessWidget {
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          backgroundColor: Colors.black,
+          backgroundColor: Colors.white,
           content: Text(
             'Profile Image uploaded Successfully!',
             style: TextStyle(color: Colors.green, fontSize: 16),
@@ -318,7 +318,7 @@ class Profile extends StatelessWidget {
     } on FirebaseException catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          backgroundColor: Colors.black,
+          backgroundColor: Colors.white,
           content: Text(
             'Error: ${e.message}',
             style: const TextStyle(color: Colors.redAccent, fontSize: 16),
