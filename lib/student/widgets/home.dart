@@ -34,7 +34,7 @@ class _HomeState extends State<Home> {
             size: 24
           ),
 
-          iconSize: 36,
+          iconSize: 32,
           currentIndex: _currentIndex,
           onTap: (int index) {
             setState(() {
@@ -48,7 +48,7 @@ class _HomeState extends State<Home> {
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.explore),
-              label: 'MapView',
+              label: 'Attendance',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.settings_input_component_sharp),

@@ -39,42 +39,54 @@ class Splash extends StatelessWidget {
               }),
             ));
 
+    var dynamicHeight = MediaQuery.of(context).size.height;
+    var dynamicWidth = MediaQuery.of(context).size.width;
+
     return Scaffold(
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
+      backgroundColor: Colors.black,
+      body: Stack(
         children: [
-          Column(
-            children: [
-              // Image.asset("", width: 12,),
-              Center(
-                child: Image.asset(
-                  "images/logo.png",
-                  width: 96,
+          Positioned(
+            bottom: dynamicHeight * 0.45,
+            left: dynamicWidth * 0.33,
+            child: Column(
+              children: [
+                // Image.asset("", width: 12,),
+                Center(
+                  child: Image.asset(
+                    "images/logo.png",
+                    width: 120,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 8),
-              const Text(
-                "Attendify",
-                style: TextStyle(
-                  fontSize: 24,
-                  color: Colors.white,
-                  fontWeight: FontWeight.w400,
-                  fontStyle: FontStyle.normal,
+                // const SizedBox(height: 8),
+                const Text(
+                  "Attendify",
+                  style: TextStyle(
+                    fontSize: 36,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w400,
+                    fontStyle: FontStyle.normal,
+                  ),
+                  textAlign: TextAlign.center,
                 ),
-                textAlign: TextAlign.center,
-              ),
-            ],
-          ),
-          const Text(
-            "Attendance Monitoring App.",
-            style: TextStyle(
-              fontSize: 12,
-              color: Colors.white,
-              fontWeight: FontWeight.w300,
-              fontStyle: FontStyle.normal,
+              ],
             ),
-            textAlign: TextAlign.center,
+          ),
+
+          const  Positioned(
+            bottom: 36,
+            left:  50,
+            right: 50,
+            child:  Text(
+              "Attendance Monitoring App.",
+              style: TextStyle(
+                fontSize:20,
+                color: Colors.white,
+                fontWeight: FontWeight.w300,
+                fontStyle: FontStyle.normal,
+              ),
+              textAlign: TextAlign.center,
+            ),
           ),
         ],
       ),

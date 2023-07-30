@@ -4,8 +4,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 class AddClassRepository {
   Future<void> addClass(
       {required String name,
-      required String cit,
-      required String cot,
+      required DateTime cit,
+      required DateTime cot,
       required List<dynamic> days}) async {
     try {
       final db = FirebaseFirestore.instance;

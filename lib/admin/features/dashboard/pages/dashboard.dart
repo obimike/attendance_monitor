@@ -251,7 +251,7 @@ class _DashBoardState extends State<DashBoard> {
                           // Handle Home navigation
                           Navigator.of(context).pop();
                           SchedulerBinding.instance.addPostFrameCallback((_) {
-                            Navigator.of(context).pushReplacement(
+                            Navigator.of(context).push(
                               MaterialPageRoute(
                                 builder: (BuildContext context) =>
                                     const AddClass(),

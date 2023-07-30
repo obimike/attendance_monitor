@@ -17,6 +17,7 @@ class AddClass extends StatefulWidget {
 
 class _AddClassState extends State<AddClass> {
   late TimeOfDay _selectedCheckInTime, _selectedCheckOutTime;
+  DateTime dt = DateTime.now();
 
   Future<void> _selectCheckInTime(BuildContext context) async {
     final TimeOfDay? pickedTime = await showTimePicker(
@@ -28,7 +29,7 @@ class _AddClassState extends State<AddClass> {
       setState(() {
         _selectedCheckInTime = pickedTime;
         context.read<AddClassBloc>().add(
-            CheckInTimeChangedEvent(cit: _selectedCheckInTime.format(context)));
+            CheckInTimeChangedEvent(cit: DateTime(dt.year, dt.month, dt.day, pickedTime.hour, pickedTime.minute)));
       });
     }
   }
@@ -43,7 +44,7 @@ class _AddClassState extends State<AddClass> {
       setState(() {
         _selectedCheckOutTime = pickedTime;
         context.read<AddClassBloc>().add(CheckOutTimeChangedEvent(
-            cot: _selectedCheckOutTime.format(context)));
+            cot: DateTime(dt.year, dt.month, dt.day, pickedTime.hour, pickedTime.minute)));
       });
     }
   }

@@ -1,3 +1,4 @@
+import 'package:Attendance_Monitor/location_service.dart';
 import 'package:Attendance_Monitor/student/features/history/data/repositories/history_repository.dart';
 import 'package:Attendance_Monitor/student/features/history/presentation/bloc/history_bloc.dart';
 import 'package:Attendance_Monitor/student/features/history/presentation/bloc/history_event.dart';
@@ -8,6 +9,7 @@ import 'package:calendar_timeline/calendar_timeline.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:circle_progress_bar/circle_progress_bar.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HistoryLog extends StatefulWidget {
   const HistoryLog({super.key});
@@ -33,9 +35,16 @@ class _HistoryLogState extends State<HistoryLog> {
 
   @override
   void initState() {
+    getPermission();
     super.initState();
     _selectedDate = DateTime.now();
     _formattedDate = DateFormat.yMMMMEEEEd().format(DateTime.now());
+  }
+
+  getPermission() async{
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool isPermitted = await LocationService().getPermission();
+    prefs.setBool('isPermitted', isPermitted);
   }
 
   @override

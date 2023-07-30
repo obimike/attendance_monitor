@@ -11,14 +11,14 @@ class ClassNameChangedEvent extends AddClassEvent {
 
 class CheckInTimeChangedEvent extends AddClassEvent {
   CheckInTimeChangedEvent({required this.cit});
-  final String cit;
+  final DateTime cit;
   @override
   List<Object> get props => [cit];
 }
 
 class CheckOutTimeChangedEvent extends AddClassEvent {
   CheckOutTimeChangedEvent({required this.cot});
-  final String cot;
+  final DateTime cot;
   @override
   List<Object> get props => [cot];
 }

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:Attendance_Monitor/location_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -50,6 +51,8 @@ class _MapPageState extends State<MapPage> {
   String name = "";
   String adminName = "";
 
+  String imgURL = FirebaseAuth.instance.currentUser!.photoURL ?? '';
+
   @override
   void initState() {
     super.initState();
@@ -58,6 +61,16 @@ class _MapPageState extends State<MapPage> {
   }
 
   void _initLocationService() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool isPermitted = prefs.getBool("isPermitted") ?? false;
+    await Geolocator.isLocationServiceEnabled();
+
+    if (!isPermitted) {
+      await Geolocator.isLocationServiceEnabled();
+      bool isPermitted = await LocationService().getPermission();
+      prefs.setBool('isPermitted', isPermitted);
+    }
+
     Geolocator.getPositionStream().listen((Position position) {
       // Update the marker position on the map
       _mapController.move(LatLng(position.latitude, position.longitude), 16.0);
@@ -204,11 +217,8 @@ class _MapPageState extends State<MapPage> {
                 style: LocationMarkerStyle(
                   marker: DefaultLocationMarker(
                     color: Colors.green,
-                    child: FirebaseAuth.instance.currentUser!.photoURL! == ""
-                        ? const Icon(
-                            Icons.person,
-                            color: Colors.white,
-                          )
+                    child: imgURL == ""
+                        ? const Icon(Icons.person, color: Colors.white)
                         : CircleAvatar(
                             radius: 12,
                             foregroundImage: NetworkImage(
@@ -461,7 +471,7 @@ class _MapPageState extends State<MapPage> {
         DateTime endOfClassTime = DateTime.parse(classCotTimestamp);
         DateTime startOfClassTime = DateTime.parse(classCitTimestamp);
 
-        if(isTimeGreaterOrEqual(startOfClassTime, citTime)){
+        if (isTimeGreaterOrEqual(startOfClassTime, citTime)) {
           setState(() {
             isLoading = false;
           });
@@ -684,7 +694,6 @@ class _MapPageState extends State<MapPage> {
     int minute2 = dateTime2.minute;
     int second2 = dateTime2.second;
 
-
     print("dateTime 2 : $hour2 $minute2 $second2");
 
     // Compare the time components
@@ -713,7 +722,8 @@ class _MapPageState extends State<MapPage> {
     int dateTimeMinute = dateTime.minute;
 
     // Calculate the difference in minutes between the time and DateTime
-    int differenceInMinutes = (hour - dateTimeHour) * 60 + (minute - dateTimeMinute);
+    int differenceInMinutes =
+        (hour - dateTimeHour) * 60 + (minute - dateTimeMinute);
 
     // Check if the difference is greater than or equal to 10 minutes
     return differenceInMinutes >= 10;

@@ -7,27 +7,28 @@ enum AddClassStatus {
   initial,
 }
 
+
 class AddClassState extends Equatable {
   const AddClassState({
     this.message = '',
     this.status = AddClassStatus.initial,
     this.name = '',
-    this.cit = '',
-    this.cot = '',
+    this.cit,
+    this.cot,
     this.days = const[],
   });
 
   final String message;
   final AddClassStatus status;
   final String name;
-  final String cit;
-  final String cot;
+  final DateTime? cit;
+  final DateTime? cot;
   final List<dynamic> days;
 
   AddClassState copyWith({
     String? name,
-    String? cit,
-    String? cot,
+    DateTime? cit,
+    DateTime? cot,
     List<dynamic>? days,
     AddClassStatus? status,
     String? message,

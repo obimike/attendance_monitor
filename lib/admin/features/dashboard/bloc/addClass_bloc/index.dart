@@ -27,6 +27,7 @@ class AddClassBloc extends Bloc<AddClassEvent, AddClassState> {
     CheckInTimeChangedEvent event,
     Emitter<AddClassState> emit,
   ) async {
+    print(event.cit);
     emit(state.copyWith(cit: event.cit));
   }
 
@@ -50,15 +51,15 @@ class AddClassBloc extends Bloc<AddClassEvent, AddClassState> {
   ) async {
     if (state.name.isNotEmpty &&
         state.days.isNotEmpty &&
-        state.cot.isNotEmpty &&
-        state.cit.isNotEmpty) {
+        state.cot != null &&
+        state.cit != null) {
       try {
         emit(
             state.copyWith(message: 'Loading', status: AddClassStatus.loading));
         await _addClassRepository.addClass(
           name: state.name,
-          cit: state.cit,
-          cot: state.cot,
+          cit: state.cit!,
+          cot: state.cot!,
           days: state.days,
         );
 

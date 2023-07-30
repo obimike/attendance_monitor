@@ -51,7 +51,7 @@ class _DashBoardBodyState extends State<DashBoardBody> {
   _getClassDetails() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     String classID = prefs.getString("classID") ?? "";
-    print(classID);
+    print("_getClassDetails classID $classID");
 
     try {
       final db = await FirebaseFirestore.instance;
@@ -59,6 +59,8 @@ class _DashBoardBodyState extends State<DashBoardBody> {
           .collection("users")
           .where("classID", isEqualTo: classID)
           .get();
+
+      print("_getClassDetails classID ${students.size}");
 
       final fetchClass = await db.collection("classes").doc(classID).get();
 
@@ -73,6 +75,11 @@ class _DashBoardBodyState extends State<DashBoardBody> {
         Timestamp classCit_ = classDoc_['cit'];
         Timestamp classCot_ = classDoc_['cot'];
 
+        setState(() {
+          className = name;
+          allStudentsCount = students.size;
+        });
+
         DateTime today = DateTime.now();
         var todayDate = DateFormat.yMd().format(today);
         List<DateTime> classCitList = [];
@@ -81,10 +88,10 @@ class _DashBoardBodyState extends State<DashBoardBody> {
         classCitList.add(classCit_.toDate());
         classCotList.add(classCot_.toDate());
 
-        int citValue = convertAverageDateTimeToNumber(classCitList);
-        int cotValue = convertAverageDateTimeToNumber(classCotList);
+        double citValue = convertAverageDateTimeToNumber(classCitList);
+        double cotValue = convertAverageDateTimeToNumber(classCotList);
 
-        int classTimeDiff = cotValue - citValue;
+        double classTimeDiff = cotValue - citValue;
 
         print("classTimeDiff $classTimeDiff");
 
@@ -105,6 +112,9 @@ class _DashBoardBodyState extends State<DashBoardBody> {
             cotList.add(cot);
 
             var setDate = DateFormat.yMd().format(attendanceDate.toDate());
+            
+            print("setDate $setDate");
+            print("todayDate $todayDate");
 
             if (todayDate == setDate) {
               Timestamp it_ = docSnapshot['cit'];
@@ -117,7 +127,9 @@ class _DashBoardBodyState extends State<DashBoardBody> {
 
               citList_.add(cit_);
               cotList_.add(cot_);
-            } else {}
+
+
+            }
           }
 
           String cit_ = DateFormat.jm()
@@ -127,33 +139,37 @@ class _DashBoardBodyState extends State<DashBoardBody> {
               .format(calculateAverageDateTime(cotList))
               .toString();
 
-          int citValue_ = convertAverageDateTimeToNumber(citList_);
-          int cotValue_ = convertAverageDateTimeToNumber(cotList_);
+          setState(() {
+            averageCit = cit_;
+            averageCot = cot_;
+          });
 
-          int attendanceTimeDiff = cotValue_ - citValue_;
+          double citValue_ = convertAverageDateTimeToNumber(citList_);
+          double cotValue_ = convertAverageDateTimeToNumber(cotList_);
+
+          double attendanceTimeDiff = cotValue_ - citValue_;
 
           print("attendanceTimeDiff $attendanceTimeDiff");
 
           double percentile = (attendanceTimeDiff / classTimeDiff);
-          var percentage = NumberFormat('##.0#', 'en_US');
+          var percentage = NumberFormat('##.0##', 'en_US');
 
           print(percentile);
 
+
           setState(() {
             this.percentage = percentage.format(percentile);
-            averageCit = cit_;
-            averageCot = cot_;
-            className = name;
           });
         }
       }
 
       setState(() {
+        hasResult = true;
         isLoading = false;
-        allStudentsCount = students.size;
       });
     } catch (e) {
       setState(() {
+        hasResult = false;
         isLoading = false;
       });
 
@@ -442,7 +458,7 @@ class _DashBoardBodyState extends State<DashBoardBody> {
     return DateTime(now.year, now.month, now.day, averageHour, averageMinute);
   }
 
-  int convertAverageDateTimeToNumber(List<DateTime> dateTimeList) {
+  double convertAverageDateTimeToNumber(List<DateTime> dateTimeList) {
     if (dateTimeList.isEmpty) {
       throw ("List can not be empty."); // Return the current DateTime if the list is empty
     }
@@ -453,7 +469,7 @@ class _DashBoardBodyState extends State<DashBoardBody> {
       totalMinutes += dateTime.hour * 60 + dateTime.minute;
     }
 
-    return totalMinutes;
+    return totalMinutes / dateTimeList.length;
   }
 
   Future<void> selectDateEvent(DateTime event) async {
@@ -488,13 +504,13 @@ class _DashBoardBodyState extends State<DashBoardBody> {
         classCitList.add(classCit_.toDate());
         classCotList.add(classCot_.toDate());
 
-        int citValue = convertAverageDateTimeToNumber(classCitList);
-        int cotValue = convertAverageDateTimeToNumber(classCotList);
+        double citValue = convertAverageDateTimeToNumber(classCitList);
+        double cotValue = convertAverageDateTimeToNumber(classCotList);
 
-        int classTimeDiff = cotValue - citValue;
+        double classTimeDiff = cotValue - citValue;
 
         print("classTimeDiff $classTimeDiff");
-
+        print("outside attendance is empty if statement");
         if (attendance.docs.isNotEmpty) {
           List<DateTime> citList = [];
           List<DateTime> cotList = [];
@@ -532,15 +548,15 @@ class _DashBoardBodyState extends State<DashBoardBody> {
             }
           }
 
-          int citValue_ = convertAverageDateTimeToNumber(citList_);
-          int cotValue_ = convertAverageDateTimeToNumber(cotList_);
+          double citValue_ = convertAverageDateTimeToNumber(citList_);
+          double cotValue_ = convertAverageDateTimeToNumber(cotList_);
 
-          int attendanceTimeDiff = cotValue_ - citValue_;
+          double attendanceTimeDiff = cotValue_ - citValue_;
 
           print("attendanceTimeDiff $attendanceTimeDiff");
 
           double percentile = (attendanceTimeDiff / classTimeDiff);
-          var percentage = NumberFormat('##.0#', 'en_US');
+          var percentage = NumberFormat('##.0##', 'en_US');
 
           print(percentile);
 
@@ -548,6 +564,13 @@ class _DashBoardBodyState extends State<DashBoardBody> {
             this.percentage = percentage.format(percentile);
             hasResult = true;
           });
+        } else{
+          print("attendance is empty");
+          setState(() {
+            isSelectDateLoading = false;
+            hasResult = false;
+          });
+          throw ("Error");
         }
       }
 
